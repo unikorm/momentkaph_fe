@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [test]
+  pull_request:
+    branches: [test]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required files exist
+        run: |
+          for f in index.html about.html contact.html gallery.html 404.html styles.css app.js; do
+            [ -f "$f" ] || { echo "Missing: $f"; exit 1; }
+          done
+          echo "All required files present."
+
+      - name: Lint HTML
+        run: |
+          npx --yes htmlhint "*.html" --config '{"doctype-first": true, "title-require": true, "attr-lowercase": true, "attr-value-double-quotes": true, "tag-pair": true, "spec-char-escape": false}'
+
+      - name: Check JS syntax
+        run: node --check app.js
