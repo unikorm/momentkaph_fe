@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontakt — momentka.ph</title>
+  <meta name="description" content="Kontaktujte Annu Lednicku — rezervujte si fotenie alebo sa len opýtajte." />
+  <link rel="icon" href="assets/favicon.ico" />
+  <link rel="preload" href="fonts/CaveatRegular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body hx-boost="true">
+
+  <div class="menu_container">
+    <nav>
+      <a href="about.html" data-i18n="nav_about">O mne</a>
+      <a href="index.html" data-i18n="nav_gallery">Galéria</a>
+      <a href="contact.html" class="active-link" data-i18n="nav_contact">Kontakt</a>
+    </nav>
+  </div>
+
+  <div class="contact_container">
+
+    <!-- Contact image -->
+    <div class="contact-image-group">
+      <div class="image-container">
+        <img src="assets/about_photo.avif" alt="fotografia Anny Lednickovej" />
+        <span data-i18n="thats_me">to som ja</span>
+      </div>
+    </div>
+
+    <!-- Form + social -->
+    <div class="contact-form-group">
+
+      <p style="font-size:1.6rem; margin:0 0 0.5rem;" data-i18n="get_in_touch">kontaktuj ma</p>
+
+      <form id="contact-form" hx-boost="false" novalidate>
+
+        <label>
+          <input
+            type="text"
+            name="name"
+            autocomplete="name"
+            data-i18n="your_name"
+            placeholder="Tvoje meno"
+            minlength="2"
+            required
+          />
+          <span class="error-hint" id="name-error" data-i18n="too_short">Príliš krátke...</span>
+        </label>
+
+        <label>
+          <input
+            type="email"
+            name="email"
+            autocomplete="email"
+            data-i18n="your_email"
+            placeholder="Tvoj email"
+            required
+          />
+          <span class="error-hint" id="email-error" data-i18n="invalid_email">Prosím zadajte platný email...</span>
+        </label>
+
+        <label>
+          <input
+            type="tel"
+            name="phone"
+            autocomplete="tel"
+            data-i18n="your_phone"
+            placeholder="Tvoje tel. číslo"
+          />
+        </label>
+
+        <label>
+          <textarea
+            name="message"
+            data-i18n="your_message"
+            placeholder="Správa pre mňa..."
+            minlength="5"
+            required
+          ></textarea>
+        </label>
+
+        <button type="submit" class="submit-btn" data-i18n="send">Odoslať správu</button>
+
+      </form>
+
+      <p class="or-divider">ALEBO</p>
+
+      <div class="social-links">
+        <a href="https://www.instagram.com/momentka.ph/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <img src="assets/instagram.svg" alt="Instagram" />
+        </a>
+        <a href="https://m.me/" target="_blank" rel="noopener noreferrer" aria-label="Messenger">
+          <img src="assets/messenger.svg" alt="Messenger" />
+        </a>
+        <a href="https://wa.me/421951775896" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+          <img src="assets/whatsapp.svg" alt="WhatsApp" />
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

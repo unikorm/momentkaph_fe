@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>momentka.ph — Anna Lednicka</title>
+  <meta name="description" content="Fotografka, ktorá zachytí tvoje najkrajšie momenty. Fotenie svadieb, rodín, novorodencov, tehotenstiev a portrétov v oblasti Žiliny." />
+  <meta property="og:title" content="momentka.ph" />
+  <meta property="og:description" content="Fotografka Anna Lednicka — svadobná, rodinná a portrétna fotografia." />
+  <meta property="og:image" content="assets/og-image.avif" />
+  <meta property="og:image:width" content="800" />
+  <meta property="og:image:height" content="797" />
+  <link rel="icon" href="assets/favicon.ico" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <link rel="preload" href="fonts/CaveatRegular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body class="gallery-overview" hx-boost="true">
+
+  <div class="language_switcher">
+    <button class="lang-btn activeLanguage" data-lang="sk">SK</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="uk">UA</button>
+  </div>
+
+  <div class="photo_grid">
+
+    <!-- Weddings -->
+    <a href="gallery.html?type=weddings" class="grid_item weddings">
+      <div class="image_container">
+        <img src="assets/gallery_weddings.avif" alt="Svadobné fotografie" loading="eager" />
+        <span data-i18n="type_weddings">Svadby</span>
+      </div>
+    </a>
+
+    <!-- Nav / Logo center -->
+    <div class="grid_item empty">
+      <div class="empty_section">
+        <nav>
+          <a href="about.html" data-i18n="nav_about">O mne</a>
+          <a href="index.html" class="active-link" data-i18n="nav_gallery">Galéria</a>
+          <a href="contact.html" data-i18n="nav_contact">Kontakt</a>
+        </nav>
+        <img src="assets/momentkaph_logo.avif" alt="momentka.ph logo" />
+      </div>
+    </div>
+
+    <!-- Love Story (full width) -->
+    <a href="gallery.html?type=love-story" class="grid_item love-story">
+      <div class="image_container">
+        <img src="assets/gallery_love-story.avif" alt="Príbehy lásky" loading="lazy" />
+        <span data-i18n="type_love_story">Príbehy lásky</span>
+      </div>
+    </a>
+
+    <!-- Pregnancy -->
+    <a href="gallery.html?type=pregnancy" class="grid_item pregnancy">
+      <div class="image_container">
+        <img src="assets/gallery_pregnancy.avif" alt="Tehotenské fotografie" loading="lazy" />
+        <span data-i18n="type_pregnancy">Tehuľky</span>
+      </div>
+    </a>
+
+    <!-- Family -->
+    <a href="gallery.html?type=family" class="grid_item family">
+      <div class="image_container">
+        <img src="assets/gallery_family.avif" alt="Rodinné fotografie" loading="lazy" />
+        <span data-i18n="type_family">Rodina</span>
+      </div>
+    </a>
+
+    <!-- Studio -->
+    <a href="gallery.html?type=studio" class="grid_item studio">
+      <div class="image_container">
+        <img src="assets/gallery_studio.avif" alt="Ateliérové fotografie" loading="lazy" />
+        <span data-i18n="type_studio">Ateliér</span>
+      </div>
+    </a>
+
+    <!-- Baptism / Babies -->
+    <a href="gallery.html?type=babies&amp;variant=baptism" class="grid_item baptism">
+      <div class="image_container">
+        <img src="assets/gallery_babies.avif" alt="Bábätká — krsty a novorodenci" loading="lazy" />
+        <span data-i18n="type_babies">Bábätká</span>
+      </div>
+    </a>
+
+    <!-- Portrait (full width) -->
+    <a href="gallery.html?type=portrait" class="grid_item portrait">
+      <div class="image_container">
+        <img src="assets/gallery_portrait.avif" alt="Portrétne fotografie" loading="lazy" />
+        <span data-i18n="type_portrait">Portréty</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Reviews -->
+  <section class="reviews">
+    <p class="reviews-label" data-i18n="reviews_label">recenzie</p>
+
+    <div class="arrow-wrapper">
+      <img src="assets/arrow.svg" alt="predošlá recenzia" class="arrow-left review-arrow-left disabled" />
+      <img src="assets/arrow-smaller.svg" alt="predošlá" class="arrow-smaller-left review-arrow-left disabled" />
+
+      <div class="reviews-list">
+        <!-- populated by app.js -->
+      </div>
+
+      <img src="assets/arrow.svg" alt="ďalšia recenzia" class="arrow-right review-arrow-right" />
+      <img src="assets/arrow-smaller.svg" alt="ďalšia" class="arrow-smaller-right review-arrow-right" />
+    </div>
+  </section>
+
+</body>
+</html>

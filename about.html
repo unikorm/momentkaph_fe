@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O mne — momentka.ph</title>
+  <meta name="description" content="Spoznajte Annu Lednicku — fotografku, ktorá zachytáva živé momenty a skutočné emócie." />
+  <link rel="icon" href="assets/favicon.ico" />
+  <link rel="preload" href="fonts/CaveatRegular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body hx-boost="true">
+
+  <div class="menu_container">
+    <nav>
+      <a href="about.html" class="active-link" data-i18n="nav_about">O mne</a>
+      <a href="index.html" data-i18n="nav_gallery">Galéria</a>
+      <a href="contact.html" data-i18n="nav_contact">Kontakt</a>
+    </nav>
+  </div>
+
+  <div class="about_container">
+    <div class="about_container_content">
+
+      <div class="image-container">
+        <img src="assets/about_photo.avif" alt="fotografia Anny Lednickovej" />
+        <span data-i18n="thats_me">to som ja</span>
+      </div>
+
+      <div class="bio" id="bio-content">
+        <!-- populated by app.js renderBio() -->
+        <p>Ahoj! Volám sa Anna Lednicka a som človek, ktorý sa raz odvážil vybrať si svoj sen. Narodila som sa na Ukrajine, vyštudovala som lekársku univerzitu a stala som sa všeobecnou lekárkou. Ale vo štvrtom ročníku som sa zamilovala do fotografie a táto vášeň ma úplne pohltila. Kombinovala som prácu zdravotnej sestry a fotografovanie, kým som nedokončila univerzitu a neuvedomila si: fotografia je moje skutočné poslanie.</p>
+        <p>Teraz žijem na Slovensku, kde začínam všetko od nuly. Nie je to ľahké, ale inšpiruje ma sen urobiť z fotografie svoje povolanie. Som manželka, mama a človek, ktorý verí, že je dôležité robiť to, čo vás zvnútra oživuje.</p>
+        <p>Čo mám na svojej práci najradšej? Sú to momenty. Živé, skutočné emócie, nie len naaranžované zábery. Počas mojich fotení sa nemusíte obávať, ako sa postaviť alebo kam sa pozerať. Vytvorím pre vás ľahkú a príjemnú atmosféru: dám vám zaujímavú úlohu, vy ju splníte a ja medzitým zachytím úprimné emócie. Začnete sa baviť a fotenie sa premení na nezabudnuteľne strávený čas — so mnou, so sebou, s vašou rodinou alebo s vašou druhou polovičkou.</p>
+        <p>Som presvedčená, že fotografie vytvorené s dušou zachovajú tieto momenty na celý život. Poďme ich vytvárať spolu!</p>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

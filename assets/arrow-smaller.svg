@@ -1,0 +1,15 @@
+<svg width="40" height="60" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <title>Small Chevron Left Arrow - 45 Degrees</title>
+
+    <line x1="30" y1="15" x2="15" y2="30" 
+          stroke="#5e3023" 
+          stroke-width="8" 
+          stroke-linecap="round"/>
+    
+    <line x1="15" y1="30" x2="30" y2="45" 
+          stroke="#5e3023" 
+          stroke-width="8" 
+          stroke-linecap="round"/>
+  </g>
+</svg>

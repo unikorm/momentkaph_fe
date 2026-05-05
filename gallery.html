@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galéria — momentka.ph</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link rel="preload" href="fonts/CaveatRegular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body class="gallery-page" hx-boost="true">
+
+  <div class="menu_container">
+    <nav>
+      <a href="about.html" data-i18n="nav_about">O mne</a>
+      <a href="index.html" data-i18n="nav_gallery">Galéria</a>
+      <a href="contact.html" data-i18n="nav_contact">Kontakt</a>
+    </nav>
+  </div>
+
+  <div class="gallery-container">
+
+    <!-- Hero title -->
+    <div class="title-for-gallery">
+      <img id="gallery-header-img" src="" alt="galéria titulná fotografia" />
+      <h1 id="gallery-title"></h1>
+    </div>
+
+    <!-- Babies sub-navigation (visible only when type=babies) -->
+    <div id="babies-variant-nav" class="description-for-gallery" style="display:none; padding-bottom:0;">
+      <div class="selection-of-babies-variant">
+        <a data-variant="baptism" href="gallery.html?type=babies&amp;variant=baptism" data-i18n="type_baptism">Krsty</a>
+        <a data-variant="newborn" href="gallery.html?type=babies&amp;variant=newborn" data-i18n="type_newborn">Novorodenci</a>
+      </div>
+    </div>
+
+    <!-- Wedding description + tips (visible only when type=weddings) -->
+    <div id="wedding-description" style="display:none;">
+      <div class="description-for-gallery">
+        <div class="description">
+          <div id="wedding-desc-content">
+            <!-- populated by app.js renderWeddingDesc() -->
+          </div>
+        </div>
+
+        <!-- Tips carousel -->
+        <div class="arrow-wrapper">
+          <img src="assets/arrow.svg" alt="predošlý tip" class="arrow-left tip-arrow-left disabled" />
+          <img src="assets/arrow-smaller.svg" alt="predošlý" class="arrow-smaller-left tip-arrow-left disabled" />
+
+          <div class="gallery-tips">
+            <!-- populated by app.js renderTips() -->
+          </div>
+
+          <img src="assets/arrow.svg" alt="ďalší tip" class="arrow-right tip-arrow-right" />
+          <img src="assets/arrow-smaller.svg" alt="ďalší" class="arrow-smaller-right tip-arrow-right" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Error state -->
+    <div id="gallery-error" class="error-message">
+      <p class="error-code">404</p>
+      <p class="gallery-error-msg" data-i18n="gallery_error">Niečo sa nám pokazilo, ADMIN už o chybe vie a pracuje na jej vyriešení, skúste to o pár hodín opäť prosím</p>
+    </div>
+
+    <!-- Image grid (masonry, populated by app.js loadGallery()) -->
+    <div id="gallery-grid" class="image-grid"></div>
+
+  </div>
+
+</body>
+</html>
