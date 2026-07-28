@@ -1,0 +1,40 @@
+/* Shared nav-link look — reused by the fixed .menu_container nav (about-me,
+   contact, gallery-type) and the gallery homepage's differently-placed nav
+   inside .empty_section (see gallery.css). */
+nav a {
+  all: unset;
+  cursor: pointer;
+  color: var(--LATTE-ACCESSIBLE);
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+nav a:not(:last-of-type) {
+  margin-right: 1rem;
+}
+
+nav a.activeLink {
+  text-decoration: line-through;
+}
+
+.menu_container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: var(--TOFFEE);
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+}
+
+.menu_container nav {
+  width: 100%;
+  max-width: 1300px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 2rem 1rem 1rem 2rem;
+}

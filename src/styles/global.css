@@ -1,0 +1,38 @@
+:root {
+  /* color */
+  --TOFFEE: #9f825b;
+  --LATTE: #d0bca0;
+  --LATTE-ACCESSIBLE: #e2d7c0;
+  --BROWNIE: #5e3023;
+  --BROWNIE-ACCESSIBLE: #4a1f13;
+
+  --DANGER-SMOOTH: #f06449;
+  --SUCCESS-SMOOTH: #386c0b;
+
+  /* fonts */
+  --FONT-PRIMARY: 400 normal 1rem "Caveat", cursive;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: block;
+  font: var(--FONT-PRIMARY);
+  color: var(--BROWNIE);
+  background-color: var(--LATTE);
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: "Caveat";
+  src: url("/fonts/CaveatReg.woff2") format("woff2");
+  font-display: optional;
+  font-weight: normal;
+  font-style: normal;
+}

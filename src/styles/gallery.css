@@ -1,0 +1,404 @@
+.gallery-page {
+  display: block;
+  width: 100%;
+  background-color: var(--TOFFEE);
+}
+
+.photo_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding-bottom: 5rem;
+}
+
+.grid_item {
+  background: var(--BROWNIE);
+
+  &.weddings {
+    height: 37.75rem;
+  }
+
+  &.empty {
+    height: 37.75rem;
+    background: var(--TOFFEE);
+
+    img {
+      width: 400px;
+      height: 400px;
+      object-fit: cover;
+    }
+  }
+
+  &.love-story {
+    grid-column: 1 / span 2;
+    height: 41rem;
+    padding-bottom: 3px;
+  }
+
+  &.pregnancy {
+    height: 46rem;
+    padding: 3px 3px 3px 0;
+  }
+
+  &.family {
+    height: 50rem;
+    padding: 3px 0 3px 3px;
+  }
+
+  &.studio {
+    height: 50rem;
+    padding: 3px 3px 3px 0;
+  }
+
+  &.baptism {
+    height: 46rem;
+    padding: 3px 0 3px 3px;
+  }
+
+  &.portrait {
+    grid-column: 1 / span 2;
+    height: 41rem;
+    padding-top: 3px;
+  }
+}
+
+a.image_container {
+  all: unset;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.image_container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 2;
+  position: relative;
+  transition: transform 300ms ease-in-out;
+}
+
+.image_container:hover img,
+.image_container.hovered img {
+  transform: scale(0.81);
+}
+
+.image_container span {
+  position: absolute;
+  bottom: 1px;
+  left: 5px;
+  font: var(--FONT-PRIMARY);
+  color: var(--LATTE);
+  font-size: 1.55rem;
+  z-index: 1;
+}
+
+.empty_section {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.empty_section nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 2rem 1rem 1rem 2rem;
+}
+
+.reviews {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 3rem;
+
+  font: var(--FONT-PRIMARY);
+  font-size: 2.5rem;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.arrow-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: fit-content;
+  position: relative;
+}
+
+.arrow-left,
+.arrow-right {
+  height: 5rem;
+  opacity: 0.3;
+  cursor: pointer;
+
+  &.disabled {
+    cursor: default;
+    opacity: 0.12;
+  }
+}
+
+.arrow-right {
+  rotate: 180deg;
+}
+
+.arrow-smaller-left,
+.arrow-smaller-right {
+  height: 2rem;
+  opacity: 0.3;
+  position: absolute;
+  cursor: pointer;
+  display: none;
+
+  &.disabled {
+    cursor: default;
+    opacity: 0.15;
+  }
+}
+
+.arrow-smaller-left {
+  top: calc(50% - 1rem);
+  left: -1.665rem;
+}
+
+.arrow-smaller-right {
+  top: calc(50% - 1rem);
+  right: -1.665rem;
+  rotate: 180deg;
+}
+
+.reviews-list {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  max-width: 38rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  opacity: 0.85;
+
+  .review {
+    font: var(--FONT-PRIMARY);
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    line-height: 1.2;
+    text-align: center;
+    align-self: center;
+
+    max-width: 38rem;
+    width: 100%;
+    padding: 0 2rem;
+    flex-shrink: 0;
+
+    .review-header,
+    .review-bottom {
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .review-author {
+      font-weight: 800;
+    }
+  }
+}
+
+.language_switcher {
+  display: flex;
+  width: 100%;
+  max-width: 1300px;
+  justify-content: end;
+  padding: 5rem 0.5rem 0.5rem;
+  margin: 0 auto;
+
+  button {
+    all: unset;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--BROWNIE-ACCESSIBLE);
+  }
+
+  button:first-of-type,
+  button:nth-of-type(2) {
+    margin-right: 0.4rem;
+  }
+
+  .activeLanguage {
+    text-decoration: line-through;
+  }
+}
+
+@media (max-width: 1000px) {
+  .photo_grid {
+    display: flex;
+    flex-direction: column;
+
+    .empty {
+      order: -1;
+    }
+
+    .weddings {
+      padding-bottom: 6px;
+    }
+
+    .weddings,
+    .empty {
+      height: 48rem;
+    }
+
+    .love-story,
+    .portrait {
+      height: 30rem;
+    }
+
+    .studio,
+    .pregnancy {
+      padding-right: 0px;
+    }
+
+    .family,
+    .baptism {
+      padding-left: 0px;
+    }
+
+    .pregnancy,
+    .baptism,
+    .family,
+    .studio {
+      height: 64rem;
+    }
+  }
+}
+
+@media (max-width: 750px) {
+  .photo_grid {
+    display: flex;
+    flex-direction: column;
+
+    .empty {
+      order: -1;
+    }
+
+    .weddings,
+    .empty {
+      height: 40rem;
+    }
+
+    .love-story,
+    .portrait {
+      height: 24rem;
+    }
+
+    .pregnancy,
+    .baptism,
+    .family,
+    .studio {
+      height: 44rem;
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .arrow-wrapper {
+    display: block;
+  }
+
+  .arrow-left,
+  .arrow-right {
+    display: none;
+  }
+
+  .arrow-smaller-left,
+  .arrow-smaller-right {
+    height: 2rem;
+    opacity: 0.3;
+    position: absolute;
+    display: block;
+  }
+
+  .arrow-smaller-left {
+    top: calc(50% - 1rem);
+    left: -2.665rem;
+  }
+
+  .arrow-smaller-right {
+    top: calc(50% - 1rem);
+    right: -2.665rem;
+    rotate: 180deg;
+  }
+
+  .reviews-list .review {
+    padding: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .arrow-smaller-left {
+    top: calc(50% - 1rem);
+    left: -1.665rem;
+  }
+
+  .arrow-smaller-right {
+    top: calc(50% - 1rem);
+    right: -1.665rem;
+  }
+}
+
+@media (max-width: 570px) {
+  .photo_grid {
+    display: flex;
+    flex-direction: column;
+
+    .empty {
+      order: -1;
+    }
+
+    .weddings,
+    .empty {
+      height: 33rem;
+    }
+
+    .love-story,
+    .portrait {
+      height: 18rem;
+    }
+
+    .pregnancy,
+    .baptism,
+    .family,
+    .studio {
+      height: 34rem;
+    }
+  }
+
+  .empty_section img {
+    width: 300px !important;
+    height: 300px !important;
+  }
+}
+
+/* Hide scrollbar on touch devices only */
+@media (hover: none) and (pointer: coarse) {
+  .reviews-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .reviews-list {
+    scrollbar-width: none;
+  }
+}

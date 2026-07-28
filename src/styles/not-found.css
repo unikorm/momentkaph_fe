@@ -1,0 +1,27 @@
+.not-found {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  color: var(--DANGER-SMOOTH);
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  padding: 2rem;
+}
+
+.not-found .error {
+  margin: .6rem 0;
+  color: var(--DANGER-SMOOTH);
+  font-size: 5rem;
+}
+
+.not-found a {
+  all: unset;
+  cursor: pointer;
+  font-size: 1.8rem;
+  text-decoration: underline;
+  color: var(--SUCCESS-SMOOTH);
+}
