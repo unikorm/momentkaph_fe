@@ -7,11 +7,11 @@
 
   "gallery.tile.weddings": "Weddings",
   "gallery.tile.loveStory": "Love Stories",
-  "gallery.tile.pregnancy": "Maternity",
+  "gallery.tile.pregnancy": "Pregnancy",
   "gallery.tile.studio": "Studio",
   "gallery.tile.family": "Family",
   "gallery.tile.baptism": "Babies",
-  "gallery.tile.portrait": "Portraits",
+  "gallery.tile.portrait": "Portrait",
   "gallery.reviewsLabel": "reviews",
 
   "aboutMe.bio.p1": "Hi! My name is Anna Lednicka, and I'm someone who once dared to choose their dream. I was born in Ukraine, studied at a medical university and became a general practitioner. But in my fourth year I fell in love with photography, and that passion completely took over. I combined working as a nurse with photography until I finished university and realized: photography is my true calling.",
@@ -40,7 +40,7 @@
   "galleryType.title.loveStory": "Love Stories",
   "galleryType.title.family": "Family",
   "galleryType.title.studio": "Studio",
-  "galleryType.title.pregnancy": "Maternity",
+  "galleryType.title.pregnancy": "Pregnancy",
   "galleryType.babies.baptism": "Baptisms",
   "galleryType.babies.newborn": "Newborns",
   "galleryType.error": "Something went wrong on our end. The admin already knows and is working on it — please try again in a few hours.",
