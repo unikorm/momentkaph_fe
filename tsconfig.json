@@ -10,8 +10,7 @@
     "skipLibCheck": true,
     "erasableSyntaxOnly": true,
     "verbatimModuleSyntax": true,
-    "sourceMap": true,
-    "lib": ["ES2023", "DOM", "DOM.Iterable"]
+    "sourceMap": false,
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["dist", "node_modules"]

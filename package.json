@@ -1,16 +1,19 @@
 {
-  "name": "client",
-  "version": "0.1.0",
+  "name": "momentkaph_fe",
+  "version": "1.6.0",
+  "description": "FE part of momentkaph.sk",
+  "main": "dist/index.html",
   "type": "module",
   "private": true,
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "watch": "tsc --watch",
-    "build": "tsc && node scripts/copy-assets.mjs",
-    "serve": "node scripts/dev-server.mjs",
-    "dev": "npm run build && npm run serve"
-  },
+  "scripts": {},
+  "keywords": [
+    "frontend",
+    "typescript",
+    "portfolio"
+  ],
+  "author": "adamko",
+  "license": "MIT",
   "devDependencies": {
-    "typescript": "~5.8.3"
+    "typescript": "^7.0.2"
   }
 }
