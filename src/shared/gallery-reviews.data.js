@@ -23,4 +23,4 @@ export const GALLERY_REVIEWS = [
     content: 'Fotky su neskutočne nádherné.. úprimne, ešte som asi nevidela krajšie svadobné fotky ako od teba❤️zachytené momenty, radosť, zábava, dojatie no proste extrem🥰 som veľmi rada že som si ťa vybrala a určite ťa odporučím❤️ Ešte raz veľmi pekne ďakujeme🫶',
     author: 'Kristína Smondek',
   },
-] as const;
+];

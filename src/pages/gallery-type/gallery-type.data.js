@@ -1,4 +1,4 @@
-export const GALLERY_TYPE_META: Record<string, { titleKey: string; headerClass?: string }> = {
+export const GALLERY_TYPE_META = {
   babies: { titleKey: 'galleryType.title.babies' },
   weddings: { titleKey: 'galleryType.title.weddings' },
   portrait: { titleKey: 'galleryType.title.portrait', headerClass: 'adjusted-title' },

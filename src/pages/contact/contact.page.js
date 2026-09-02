@@ -1,22 +1,19 @@
-import type { Page } from '../../router.js';
 import { renderNav } from '../../shared/nav.js';
 import { sendEmail } from '../../services/email.service.js';
 import { i18n } from '../../services/i18n.service.js';
-import type { SendEmailType } from '../../shared/types/send-email.type.js';
 
-type ButtonStatus = 'idle' | 'sending' | 'success' | 'error';
-
-const BUTTON_LABEL_KEY: Record<ButtonStatus, string> = {
+/** Submit-button label per status: 'idle' | 'sending' | 'success' | 'error'. */
+const BUTTON_LABEL_KEY = {
   idle: 'contact.form.button.idle',
   sending: 'contact.form.button.sending',
   success: 'contact.form.button.success',
   error: 'contact.form.button.error',
 };
 
-export default class ContactPage implements Page {
-  private resetTimer: ReturnType<typeof setTimeout> | null = null;
+export default class ContactPage {
+  #resetTimer = null;
 
-  render(container: HTMLElement): void {
+  render(container) {
     container.innerHTML = `
       <div class="contact-page">
         ${renderNav('/contact-me')}
@@ -80,36 +77,36 @@ export default class ContactPage implements Page {
     const imageContainer = container.querySelector('.contact-image-container');
     imageContainer?.addEventListener('touchstart', () => imageContainer.classList.toggle('hovered'));
 
-    const form = container.querySelector('form')!;
-    form.addEventListener('submit', (event) => this.onSubmit(event, form));
+    const form = container.querySelector('form');
+    form.addEventListener('submit', (event) => this.#onSubmit(event, form));
   }
 
-  destroy(): void {
-    if (this.resetTimer) clearTimeout(this.resetTimer);
+  destroy() {
+    if (this.#resetTimer) clearTimeout(this.#resetTimer);
   }
 
-  private async onSubmit(event: SubmitEvent, form: HTMLFormElement): Promise<void> {
+  async #onSubmit(event, form) {
     event.preventDefault();
     form.classList.add('submitted');
     if (!form.checkValidity()) return;
 
-    const button = form.querySelector('button')!;
-    this.setStatus(button, 'sending');
+    const button = form.querySelector('button');
+    this.#setStatus(button, 'sending');
 
-    const data = Object.fromEntries(new FormData(form)) as unknown as SendEmailType;
+    const data = Object.fromEntries(new FormData(form));
     try {
       const res = await sendEmail(data);
-      this.setStatus(button, res.status === 200 ? 'success' : 'error');
+      this.#setStatus(button, res.status === 200 ? 'success' : 'error');
     } catch {
-      this.setStatus(button, 'error');
+      this.#setStatus(button, 'error');
     }
 
     form.reset();
     form.classList.remove('submitted');
-    this.resetTimer = setTimeout(() => this.setStatus(button, 'idle'), 3000);
+    this.#resetTimer = setTimeout(() => this.#setStatus(button, 'idle'), 3000);
   }
 
-  private setStatus(button: HTMLButtonElement, status: ButtonStatus): void {
+  #setStatus(button, status) {
     button.classList.toggle('success', status === 'success');
     button.classList.toggle('error', status === 'error');
     button.textContent = i18n.t(BUTTON_LABEL_KEY[status]);

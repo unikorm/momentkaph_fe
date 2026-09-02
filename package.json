@@ -1,19 +1,25 @@
 {
   "name": "momentkaph_fe",
-  "version": "1.6.0",
-  "description": "FE part of momentkaph.sk",
-  "main": "dist/index.html",
+  "version": "2.0.0",
+  "description": "FE part of momentkaph.sk — plain ES modules, no framework, no dependencies",
+  "main": "src/index.html",
   "type": "module",
   "private": true,
-  "scripts": {},
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node scripts/serve.js",
+    "dev": "node scripts/serve.js",
+    "build": "node scripts/build.js",
+    "preview": "node scripts/build.js && node scripts/serve.js --root dist",
+    "check": "node scripts/check.js"
+  },
   "keywords": [
     "frontend",
-    "typescript",
+    "javascript",
     "portfolio"
   ],
   "author": "adamko",
-  "license": "MIT",
-  "devDependencies": {
-    "typescript": "^7.0.2"
-  }
+  "license": "MIT"
 }

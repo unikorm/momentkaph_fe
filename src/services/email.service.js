@@ -1,7 +1,7 @@
 import { apiUrl } from '../config/env.js';
-import type { SendEmailType } from '../shared/types/send-email.type.js';
 
-export async function sendEmail(data: SendEmailType): Promise<{ status: number }> {
+/** `data` is `{ name, email, phone, message }`. */
+export async function sendEmail(data) {
   const res = await fetch(`${apiUrl}/email_sending`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

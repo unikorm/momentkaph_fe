@@ -3,7 +3,7 @@ import { Router, setRouter } from './router.js';
 import { routes } from './routes.js';
 import { i18n } from './services/i18n.service.js';
 
-async function bootstrap(): Promise<void> {
+async function bootstrap() {
   await i18n.init();
 
   const root = document.getElementById('app');

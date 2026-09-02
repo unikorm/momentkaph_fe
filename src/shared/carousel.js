@@ -4,27 +4,27 @@
  */
 export class Carousel {
   index = 0;
-  private readonly maxIndex: number;
+  #maxIndex;
 
-  constructor(maxIndex: number) {
-    this.maxIndex = maxIndex;
+  constructor(maxIndex) {
+    this.#maxIndex = maxIndex;
   }
 
-  get atStart(): boolean {
+  get atStart() {
     return this.index === 0;
   }
 
-  get atEnd(): boolean {
-    return this.index === this.maxIndex;
+  get atEnd() {
+    return this.index === this.#maxIndex;
   }
 
-  next(): boolean {
+  next() {
     if (this.atEnd) return false;
     this.index++;
     return true;
   }
 
-  prev(): boolean {
+  prev() {
     if (this.atStart) return false;
     this.index--;
     return true;

@@ -1,9 +1,8 @@
-import type { Page } from '../../router.js';
 import { renderNav } from '../../shared/nav.js';
 import { i18n } from '../../services/i18n.service.js';
 
-export default class AboutMePage implements Page {
-  render(container: HTMLElement): void {
+export default class AboutMePage {
+  render(container) {
     container.innerHTML = `
       ${renderNav('/about-me')}
       <div class="about_container">

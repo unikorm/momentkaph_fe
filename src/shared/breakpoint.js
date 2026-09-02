@@ -1,9 +1,9 @@
 /**
  * Wraps matchMedia with a change callback, replacing Angular CDK's BreakpointObserver.
- * Returns an unsubscribe function — callers MUST call it from Page.destroy(), since a
- * matchMedia listener is document-scoped and outlives the page's DOM otherwise.
+ * Returns an unsubscribe function — callers MUST call it from their page's destroy(),
+ * since a matchMedia listener is document-scoped and outlives the page's DOM otherwise.
  */
-export function watchMedia(query: string, onChange: (matches: boolean) => void): () => void {
+export function watchMedia(query, onChange) {
   const mql = matchMedia(query);
   const handler = () => onChange(mql.matches);
   mql.addEventListener('change', handler);
