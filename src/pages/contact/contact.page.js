@@ -1,5 +1,5 @@
 import { renderNav } from '../../shared/nav.js';
-import { sendEmail } from '../../services/email.service.js';
+import { sendEmail } from '../../services/api.js';
 import { i18n } from '../../services/i18n.service.js';
 
 /** Submit-button label per status: 'idle' | 'sending' | 'success' | 'error'. */

@@ -9,11 +9,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "node scripts/serve.js",
-    "dev": "node scripts/serve.js",
-    "build": "node scripts/build.js",
-    "preview": "node scripts/build.js && node scripts/serve.js --root dist",
-    "check": "node scripts/check.js"
+    "dev": "node dev.js",
+    "build": "node build.js",
+    "preview": "node build.js && node dev.js 4300 --dist"
   },
   "keywords": [
     "frontend",

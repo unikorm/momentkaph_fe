@@ -2,7 +2,7 @@ import { getRouter } from '../../router.js';
 import { renderNav } from '../../shared/nav.js';
 import { Carousel } from '../../shared/carousel.js';
 import { watchMedia, MOBILE_QUERY } from '../../shared/breakpoint.js';
-import { fetchGalleryImagesLinks } from '../../services/cloud-storage.service.js';
+import { fetchGalleryImagesLinks } from '../../services/api.js';
 import { i18n } from '../../services/i18n.service.js';
 import { GALLERY_TYPES } from '../../shared/gallery-types.js';
 import { GALLERY_TYPE_META, WEDDING_DESCRIPTION_COUNT, WEDDING_TIPS_COUNT } from './gallery-type.data.js';

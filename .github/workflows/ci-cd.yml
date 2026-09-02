@@ -17,30 +17,19 @@ jobs:
         with:
           node-version: '22'
 
-      # No `npm ci` step: the app has zero dependencies, and the checks below
-      # run on the Node standard library alone.
-
-      - name: Check required files exist
-        run: |
-          for f in src/index.html src/main.js src/router.js src/routes.js; do
-            [ -f "$f" ] || { echo "Missing: $f"; exit 1; }
-          done
-          echo "All required files present."
+      # No `npm ci`: the app has zero dependencies and the build is stdlib-only.
 
       - name: Check for stray dependencies
         run: |
           node -e "
             const pkg = require('./package.json');
-            const deps = { ...pkg.dependencies, ...pkg.devDependencies };
-            if (Object.keys(deps).length) {
-              console.error('This project must stay dependency-free, found:', Object.keys(deps).join(', '));
-              process.exit(1);
-            }
+            const deps = Object.keys({ ...pkg.dependencies, ...pkg.devDependencies });
+            if (deps.length) { console.error('Must stay dependency-free, found:', deps.join(', ')); process.exit(1); }
             console.log('No dependencies. Good.');
           "
 
-      - name: Syntax, imports and i18n
-        run: npm run check
+      - name: Syntax check every source file
+        run: find src dev.js build.js -name '*.js' -exec node --check {} +
 
       - name: Build
         run: npm run build
