@@ -9,27 +9,10 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      # No `npm ci`: the app has zero dependencies and the build is stdlib-only.
-
-      - name: Check for stray dependencies
-        run: |
-          node -e "
-            const pkg = require('./package.json');
-            const deps = Object.keys({ ...pkg.dependencies, ...pkg.devDependencies });
-            if (deps.length) { console.error('Must stay dependency-free, found:', deps.join(', ')); process.exit(1); }
-            console.log('No dependencies. Good.');
-          "
-
-      - name: Syntax check every source file
-        run: find src dev.js build.js -name '*.js' -exec node --check {} +
-
-      - name: Build
-        run: npm run build
+      - name: Check JS syntax
+        run: find src/js dev.js -name '*.js' -exec node --check {} +

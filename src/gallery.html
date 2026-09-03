@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8">
+  <title>Galéria | momentka.ph</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/favicon.ico">
+  <link rel="preload" href="fonts/CaveatReg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles/global.css">
+  <link rel="stylesheet" href="styles/nav.css">
+  <link rel="stylesheet" href="styles/gallery-type.css">
+  <script type="module" src="js/lang.js"></script>
+  <script type="module" src="js/gallery.js"></script>
+</head>
+<body>
+  <div class="menu_container">
+    <nav>
+      <a href="about-me.html" data-i18n="nav.aboutMe">O mne</a>
+      <a href="index.html" class="activeLink" data-i18n="nav.gallery">Galéria</a>
+      <a href="contact-me.html" data-i18n="nav.contact">Kontakt</a>
+    </nav>
+  </div>
+  <div class="gallery-container">
+    <div class="title-for-gallery">
+      <img id="hero" src="" alt="">
+      <h1 id="title"></h1>
+    </div>
+
+    <div class="error-message" hidden>
+      <p class="error">404</p>
+      <p data-i18n="galleryType.error">Niečo sa nám pokazilo, ADMIN už o chybe vie a pracuje na jej vyriešení, skúste to o pár hodín opäť prosím</p>
+    </div>
+
+    <div class="image-grid" hidden></div>
+  </div>
+
+  <div class="language_switcher">
+    <button type="button" data-lang="sk">SK</button>
+    <button type="button" data-lang="en">EN</button>
+    <button type="button" data-lang="uk">UA</button>
+  </div>
+</body>
+</html>

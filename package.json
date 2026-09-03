@@ -2,16 +2,13 @@
   "name": "momentkaph_fe",
   "version": "2.0.0",
   "description": "FE part of momentkaph.sk — plain ES modules, no framework, no dependencies",
-  "main": "src/index.html",
   "type": "module",
   "private": true,
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "dev": "node dev.js",
-    "build": "node build.js",
-    "preview": "node build.js && node dev.js 4300 --dist"
+    "dev": "node dev.js"
   },
   "keywords": [
     "frontend",
@@ -19,5 +16,6 @@
     "portfolio"
   ],
   "author": "adamko",
-  "license": "MIT"
+  "license": "MIT",
+  "main": "src/index.html"
 }
