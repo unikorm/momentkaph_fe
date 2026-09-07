@@ -1,40 +1,66 @@
 <!DOCTYPE html>
 <html lang="sk">
+
 <head>
-  <meta charset="utf-8">
-  <title>momentka.ph | Anna Lednicka</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="assets/favicon.ico">
+  <meta charset="utf-8" />
+  <title>Momentkaph</title>
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="description"
+    content="Fotografka, ktorá zachytí tvoje najkrajšie momenty. Fotenie svadieb, rodín a detí, novorodencov, tehotenské, portréty, atď.">
+  <meta name="keywords"
+    content="Profesionálna fotografka Žilina: Fotenie rodín a detí, Novorodenecké fotografie, Tehotenské fotenie, Fotoatelier Žilina, Detská fotografia, Fotenie detí a bábätiek, Rodinný fotograf, Portréty, Svadby, ">
+  <meta name="author" content="Anna Lednicka">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://momentkaph.sk/">
+  <meta property="og:title" content="momentka.ph | Anna Lednicka">
+  <meta property="og:description"
+    content="Fotografka, ktorá zachytí tvoje najkrajšie momenty. Fotenie svadieb, rodín a detí, novorodencov, tehotenské, portréty, atď.">
+  <meta property="og:image" content="https://momentkaph.sk/sk/assets/about_photo.avif">
+  <meta property="og:image:width" content="800">
+  <meta property="og:image:height" content="797">
+  <meta property="og:site_name" content="momentka.ph | Anna Lednicka">
+
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/android-chrome-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="manifest" href="assets/site.webmanifest">
   <link rel="preload" href="fonts/CaveatReg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
   <link rel="stylesheet" href="styles/global.css">
+  <link rel="stylesheet" href="styles/index.css">
   <link rel="stylesheet" href="styles/nav.css">
-  <link rel="stylesheet" href="styles/gallery.css">
-  <script type="module" src="js/lang.js"></script>
 </head>
+
 <body>
   <div class="photo_grid">
-      <div class="grid_item weddings">
-        <a class="image_container" href="gallery.html?type=weddings">
-          <img src="assets/gallery_weddings.avif" alt="Svadby" loading="lazy">
-          <span data-i18n="gallery.tile.weddings">Svadby</span>
-        </a>
-      </div>
+    <div class="grid_item weddings">
+      <a class="image_container" href="gallery.html?type=weddings">
+        <img src="assets/gallery_weddings.avif" alt="Svadby" loading="lazy">
+        <span data-i18n="gallery.tile.weddings">Svadby</span>
+      </a>
+    </div>
     <div class="grid_item empty">
       <div class="empty_section">
         <nav>
-          <a href="about-me.html" data-i18n="nav.aboutMe">O mne</a>
-          <a href="index.html" class="activeLink" data-i18n="nav.gallery">Galéria</a>
-          <a href="contact-me.html" data-i18n="nav.contact">Kontakt</a>
+          <a href="src/about-me.html" data-i18n="nav.aboutMe">O mne</a>
+          <a href="src/index.html" class="activeLink" data-i18n="nav.gallery">Galéria</a>
+          <a href="src/contact-me.html" data-i18n="nav.contact">Kontakt</a>
         </nav>
         <img src="assets/about_photo.avif" alt="to som ja">
       </div>
     </div>
-      <div class="grid_item love-story">
-        <a class="image_container" href="gallery.html?type=love-story">
-          <img src="assets/gallery_love-story.avif" alt="Príbehy lásky" loading="lazy">
-          <span data-i18n="gallery.tile.loveStory">Príbehy lásky</span>
-        </a>
-      </div>
+    <div class="grid_item love-story">
+      <a class="image_container" href="gallery.html?type=love-story">
+        <img src="assets/gallery_love-story.avif" alt="Príbehy lásky" loading="lazy">
+        <span data-i18n="gallery.tile.loveStory">Príbehy lásky</span>
+      </a>
+    </div>
     <div>
       <div class="grid_item pregnancy">
         <a class="image_container" href="gallery.html?type=pregnancy">
@@ -57,18 +83,18 @@
         </a>
       </div>
       <div class="grid_item babies">
-        <a class="image_container" href="gallery.html?type=baptism">
+        <a class="image_container" href="gallery.html?type=babies">
           <img src="assets/gallery_babies.avif" alt="Bábätká" loading="lazy">
-          <span data-i18n="gallery.tile.baptism">Bábätká</span>
+          <span data-i18n="gallery.tile.babies">Bábätká</span>
         </a>
       </div>
     </div>
-      <div class="grid_item portrait">
-        <a class="image_container" href="gallery.html?type=portrait">
-          <img src="assets/gallery_portrait.avif" alt="Portréty" loading="lazy">
-          <span data-i18n="gallery.tile.portrait">Portréty</span>
-        </a>
-      </div>
+    <div class="grid_item portrait">
+      <a class="image_container" href="gallery.html?type=portrait">
+        <img src="assets/gallery_portrait.avif" alt="Portréty" loading="lazy">
+        <span data-i18n="gallery.tile.portrait">Portréty</span>
+      </a>
+    </div>
   </div>
 
   <div class="language_switcher">

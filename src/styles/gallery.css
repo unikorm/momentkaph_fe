@@ -1,135 +1,141 @@
-.gallery-page {
+.gallery-type-page {
   display: block;
   width: 100%;
-  background-color: var(--TOFFEE);
+  background-color: var(--WARM-SAND);
 }
 
-.photo_grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+.gallery-container {
   width: 100%;
-  max-width: 1300px;
+  max-width: 2000px;
+  max-height: 100svh;
   margin: 0 auto;
-  padding-bottom: 5rem;
+  padding-bottom: 10rem;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity !important;
 }
 
-.grid_item {
-  background: var(--BROWNIE);
-
-  &.weddings {
-    height: 37.75rem;
-  }
-
-  &.empty {
-    height: 37.75rem;
-    background: var(--TOFFEE);
-
-    img {
-      width: 400px;
-      height: 400px;
-      object-fit: cover;
-    }
-  }
-
-  &.love-story {
-    grid-column: 1 / span 2;
-    height: 41rem;
-    padding-bottom: 3px;
-  }
-
-  &.pregnancy {
-    height: 46rem;
-    padding: 3px 3px 3px 0;
-  }
-
-  &.family {
-    height: 50rem;
-    padding: 3px 0 3px 3px;
-  }
-
-  &.studio {
-    height: 50rem;
-    padding: 3px 3px 3px 0;
-  }
-
-  &.baptism {
-    height: 46rem;
-    padding: 3px 0 3px 3px;
-  }
-
-  &.portrait {
-    grid-column: 1 / span 2;
-    height: 41rem;
-    padding-top: 3px;
-  }
-}
-
-a.image_container {
-  all: unset;
-  display: flex;
+.title-for-gallery {
   width: 100%;
-  height: 100%;
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100svh;
   position: relative;
-  cursor: pointer;
+  overflow: hidden;
+  scroll-snap-align: start;
 }
 
-.image_container img {
+.title-for-gallery img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 2;
-  position: relative;
-  transition: transform 300ms ease-in-out;
 }
 
-.image_container:hover img,
-.image_container.hovered img {
-  transform: scale(0.81);
-}
-
-.image_container span {
+.title-for-gallery h1 {
   position: absolute;
-  bottom: 1px;
-  left: 5px;
-  font: var(--FONT-PRIMARY);
-  color: var(--LATTE);
-  font-size: 1.55rem;
-  z-index: 1;
+  left: 25px;
+  bottom: 25px;
+  margin: 0;
+  color: var(--WARM-SAND);
+  font-size: 3rem;
 }
 
-.empty_section {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+.adjusted-title {
+  object-position: 75%;
 }
 
-.empty_section nav {
-  position: absolute;
-  top: 0;
-  right: 0;
+.pregnancy-title {
+  object-position: 25%;
+}
+
+.description-for-gallery {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
-  padding: 2rem 1rem 1rem 2rem;
+  gap: 7rem;
+  justify-content: space-between;
+  align-items: center;
+  height: auto;
+  flex-direction: column;
+  position: relative;
+  scroll-snap-align: start;
+  padding: 5rem 3rem;
+
+  .description,
+  .tip {
+    font: var(--FONT-PRIMARY);
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .description {
+    width: 100%;
+    max-width: 1564px;
+    padding: 8rem 2rem 0;
+  }
 }
 
-.reviews {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
+.selection-of-babies-variant {
   width: 100%;
-  padding: 1rem 3rem;
+  display: flex;
+  justify-content: space-around;
+  max-width: 100%;
+  padding: 1rem 0 0;
 
-  font: var(--FONT-PRIMARY);
-  font-size: 2.5rem;
-  letter-spacing: 1px;
-  line-height: 1.2;
-  text-align: center;
+  a {
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5rem;
+    margin: 0;
+    color: var(--BROWNIE);
+  }
+}
+
+.activeLinkSection {
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: 0.5rem;
+  margin: 0;
+  text-decoration: underline;
+}
+
+.headlineOfTextInDescription,
+.headlineOfTipInDescription {
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+  font-size: 1.65rem;
+}
+
+.headlineOfTextInDescription {
+  padding-top: 0.6rem;
+}
+
+.contentOfTextInDescription,
+.contentOfTipInDescription {
+  opacity: 0.85;
+}
+
+.gallery-tips {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  max-width: 32rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  opacity: 0.85;
+
+  .tip {
+    max-width: 32rem;
+    width: 100%;
+    padding: 0 2rem;
+    flex-shrink: 0;
+
+    .tip-number {
+      font-weight: 700;
+    }
+  }
 }
 
 .arrow-wrapper {
@@ -143,12 +149,12 @@ a.image_container {
 .arrow-left,
 .arrow-right {
   height: 5rem;
-  opacity: 0.3;
+  opacity: 0.19;
   cursor: pointer;
 
   &.disabled {
     cursor: default;
-    opacity: 0.12;
+    opacity: 0.05;
   }
 }
 
@@ -159,14 +165,14 @@ a.image_container {
 .arrow-smaller-left,
 .arrow-smaller-right {
   height: 2rem;
-  opacity: 0.3;
+  opacity: 0.19;
   position: absolute;
   cursor: pointer;
   display: none;
 
   &.disabled {
     cursor: default;
-    opacity: 0.15;
+    opacity: 0.05;
   }
 }
 
@@ -181,139 +187,64 @@ a.image_container {
   rotate: 180deg;
 }
 
-.reviews-list {
+.image-grid {
+  min-height: 100svh;
+  gap: 0.8rem;
+  padding: 5.1rem 0.8rem 0.4rem;
   display: flex;
-  gap: 2rem;
-  width: 100%;
-  max-width: 38rem;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  opacity: 0.85;
-
-  .review {
-    font: var(--FONT-PRIMARY);
-    font-size: 1.5rem;
-    letter-spacing: 1px;
-    line-height: 1.2;
-    text-align: center;
-    align-self: center;
-
-    max-width: 38rem;
-    width: 100%;
-    padding: 0 2rem;
-    flex-shrink: 0;
-
-    .review-header,
-    .review-bottom {
-      font-weight: 700;
-    }
-
-    p {
-      margin: 0;
-    }
-
-    .review-author {
-      font-weight: 800;
-    }
-  }
+  scroll-snap-align: start;
 }
 
-.language_switcher {
+.image-column {
+  flex: 1;
   display: flex;
+  flex-direction: column;
+}
+
+.image-card {
+  padding: 0.2rem 0;
   width: 100%;
-  max-width: 1300px;
-  justify-content: end;
-  padding: 5rem 0.5rem 0.5rem;
-  margin: 0 auto;
+  break-inside: avoid;
 
-  button {
-    all: unset;
-    cursor: pointer;
-    font-size: 1rem;
-    color: var(--BROWNIE-ACCESSIBLE);
-  }
-
-  button:first-of-type,
-  button:nth-of-type(2) {
-    margin-right: 0.4rem;
-  }
-
-  .activeLanguage {
-    text-decoration: line-through;
+  img {
+    max-width: 100%;
+    height: auto;
   }
 }
 
-@media (max-width: 1000px) {
-  .photo_grid {
-    display: flex;
-    flex-direction: column;
+.error-message {
+  width: 100%;
+  height: 100svh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 0 2rem;
+  color: var(--DANGER-SMOOTH);
+  font-size: 1.6rem;
+  scroll-snap-align: start;
 
-    .empty {
-      order: -1;
-    }
-
-    .weddings {
-      padding-bottom: 6px;
-    }
-
-    .weddings,
-    .empty {
-      height: 48rem;
-    }
-
-    .love-story,
-    .portrait {
-      height: 30rem;
-    }
-
-    .studio,
-    .pregnancy {
-      padding-right: 0px;
-    }
-
-    .family,
-    .baptism {
-      padding-left: 0px;
-    }
-
-    .pregnancy,
-    .baptism,
-    .family,
-    .studio {
-      height: 64rem;
-    }
+  p {
+    margin: 0;
   }
 }
 
-@media (max-width: 750px) {
-  .photo_grid {
-    display: flex;
-    flex-direction: column;
-
-    .empty {
-      order: -1;
-    }
-
-    .weddings,
-    .empty {
-      height: 40rem;
-    }
-
-    .love-story,
-    .portrait {
-      height: 24rem;
-    }
-
-    .pregnancy,
-    .baptism,
-    .family,
-    .studio {
-      height: 44rem;
-    }
-  }
+.error {
+  margin-bottom: 1rem !important;
+  color: var(--DANGER-SMOOTH);
+  font-size: 4rem;
 }
 
 @media screen and (max-width: 700px) {
+  .title-for-gallery h1 {
+    font-size: 2.25rem;
+  }
+
+  .description-for-gallery .description {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .arrow-wrapper {
     display: block;
   }
@@ -326,7 +257,7 @@ a.image_container {
   .arrow-smaller-left,
   .arrow-smaller-right {
     height: 2rem;
-    opacity: 0.3;
+    opacity: 0.15;
     position: absolute;
     display: block;
   }
@@ -342,12 +273,22 @@ a.image_container {
     rotate: 180deg;
   }
 
-  .reviews-list .review {
+  .gallery-tips .tip {
     padding: 0;
+  }
+
+  .selection-of-babies-variant {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
   }
 }
 
-@media (max-width: 600px) {
+@media screen and (max-width: 540px) {
+  .description-for-gallery {
+    padding: 5rem 2rem;
+  }
+
   .arrow-smaller-left {
     top: calc(50% - 1rem);
     left: -1.665rem;
@@ -357,48 +298,24 @@ a.image_container {
     top: calc(50% - 1rem);
     right: -1.665rem;
   }
-}
 
-@media (max-width: 570px) {
-  .photo_grid {
-    display: flex;
-    flex-direction: column;
-
-    .empty {
-      order: -1;
-    }
-
-    .weddings,
-    .empty {
-      height: 33rem;
-    }
-
-    .love-story,
-    .portrait {
-      height: 18rem;
-    }
-
-    .pregnancy,
-    .baptism,
-    .family,
-    .studio {
-      height: 34rem;
-    }
+  .image-grid {
+    gap: 0.3rem;
+    padding: 5rem 0.3rem 0;
   }
 
-  .empty_section img {
-    width: 300px !important;
-    height: 300px !important;
+  .image-card {
+    padding: 0 0;
   }
 }
 
 /* Hide scrollbar on touch devices only */
 @media (hover: none) and (pointer: coarse) {
-  .reviews-list::-webkit-scrollbar {
+  .gallery-tips::-webkit-scrollbar {
     display: none;
   }
 
-  .reviews-list {
+  .gallery-tips {
     scrollbar-width: none;
   }
 }

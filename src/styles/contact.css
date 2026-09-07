@@ -2,7 +2,7 @@
   display: block;
   width: 100%;
   min-height: 100vh;
-  background-color: var(--LATTE);
+  background-color: var(--WARM-SAND);
 }
 
 .contact_container {
@@ -144,7 +144,7 @@ button {
   padding: 0.5rem;
   font: var(--FONT-PRIMARY);
   border: none;
-  color: var(--LATTE-ACCESSIBLE);
+  color: var(--WARM-SAND-ACCESSIBLE);
   background-color: var(--TOFFEE);
   cursor: pointer;
   font-size: 1.45rem;
@@ -200,7 +200,7 @@ button:not(.success):not(.error):hover {
   bottom: 0;
   left: 0;
   font: var(--FONT-PRIMARY);
-  color: var(--LATTE);
+  color: var(--WARM-SAND);
   font-size: 1.3rem;
   z-index: 1;
 }

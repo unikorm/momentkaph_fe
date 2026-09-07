@@ -4,8 +4,8 @@
 nav a {
   all: unset;
   cursor: pointer;
-  color: var(--LATTE-ACCESSIBLE);
-  font-size: 1.3rem;
+  color: var(--WARM-SAND);
+  font-size: 1.4rem;
   letter-spacing: 1px;
   line-height: 1;
 }

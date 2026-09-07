@@ -33,7 +33,7 @@ async function apply(lang) {
   document.documentElement.lang = lang;
 
   if (lang !== DEFAULT) {
-    const dict = await (await fetch(`i18n/${lang}.json`)).json();
+    const dict = await (await fetch(`lang/${lang}.json`)).json();
 
     for (const el of document.querySelectorAll('[data-i18n]')) {
       if (dict[el.dataset.i18n]) el.innerHTML = dict[el.dataset.i18n];

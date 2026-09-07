@@ -1,10 +1,8 @@
 :root {
   /* color */
-  --TOFFEE: #9f825b;
-  --LATTE: #d0bca0;
-  --LATTE-ACCESSIBLE: #e2d7c0;
-  --BROWNIE: #5e3023;
-  --BROWNIE-ACCESSIBLE: #4a1f13;
+  --TOFFEE: #8f8360;
+  --WARM-SAND: #e9cf99;
+  --BROWNIE: #3c3316;
 
   --DANGER-SMOOTH: #f06449;
   --SUCCESS-SMOOTH: #386c0b;
@@ -21,7 +19,7 @@ body {
   display: block;
   font: var(--FONT-PRIMARY);
   color: var(--BROWNIE);
-  background-color: var(--LATTE);
+  background-color: var(--WARM-SAND);
   scroll-behavior: smooth;
 }
 
