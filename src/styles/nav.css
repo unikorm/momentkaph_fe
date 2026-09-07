@@ -4,7 +4,7 @@
 nav a {
   all: unset;
   cursor: pointer;
-  color: var(--WARM-SAND);
+  color: var(--BUTTER);
   font-size: 1.4rem;
   letter-spacing: 1px;
   line-height: 1;
@@ -22,7 +22,7 @@ nav a.activeLink {
   width: 100%;
   display: flex;
   justify-content: center;
-  background-color: var(--TOFFEE);
+  background-color: var(--SAGE);
   padding: 0;
   margin: 0;
   position: fixed;

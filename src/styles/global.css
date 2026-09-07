@@ -1,8 +1,8 @@
 :root {
   /* color */
-  --TOFFEE: #8f8360;
-  --WARM-SAND: #e9cf99;
-  --BROWNIE: #3c3316;
+  --SAGE: #8f8360;
+  --BUTTER: #e9cf99;
+  --MOSS: #3c3316;
 
   --DANGER-SMOOTH: #f06449;
   --SUCCESS-SMOOTH: #386c0b;
@@ -18,8 +18,8 @@ body {
   width: 100%;
   display: block;
   font: var(--FONT-PRIMARY);
-  color: var(--BROWNIE);
-  background-color: var(--WARM-SAND);
+  color: var(--MOSS);
+  background-color: var(--BUTTER);
   scroll-behavior: smooth;
 }
 

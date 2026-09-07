@@ -1,7 +1,7 @@
 body {
   display: block;
   width: 100%;
-  background-color: var(--TOFFEE);
+  background-color: var(--SAGE);
 }
 
 .photo_grid {
@@ -14,7 +14,7 @@ body {
 }
 
 .grid_item {
-  background: var(--BROWNIE);
+  background: var(--MOSS);
 
   &.weddings {
     height: 37.75rem;
@@ -22,7 +22,7 @@ body {
 
   &.empty {
     height: 37.75rem;
-    background: var(--TOFFEE);
+    background: var(--SAGE);
 
     img {
       width: 400px;
@@ -93,7 +93,7 @@ a.image_container {
   bottom: 1px;
   left: 5px;
   font: var(--FONT-PRIMARY);
-  color: var(--WARM-SAND);
+  color: var(--BUTTER);
   font-size: 1.55rem;
   z-index: 1;
 }
@@ -230,7 +230,7 @@ a.image_container {
     all: unset;
     cursor: pointer;
     font-size: 1rem;
-    color: var(--BROWNIE-ACCESSIBLE);
+    color: var(--MOSS-ACCESSIBLE);
   }
 
   button:first-of-type,
