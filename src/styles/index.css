@@ -272,12 +272,12 @@ a.image_container {
     }
 
     .family,
-    .baptism {
+    .babies {
       padding-left: 0px;
     }
 
     .pregnancy,
-    .baptism,
+    .babies,
     .family,
     .studio {
       height: 64rem;
@@ -305,7 +305,7 @@ a.image_container {
     }
 
     .pregnancy,
-    .baptism,
+    .babies,
     .family,
     .studio {
       height: 44rem;
@@ -379,7 +379,7 @@ a.image_container {
     }
 
     .pregnancy,
-    .baptism,
+    .babies,
     .family,
     .studio {
       height: 34rem;
