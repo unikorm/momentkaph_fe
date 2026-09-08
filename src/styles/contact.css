@@ -1,8 +1,9 @@
-.contact-page {
+body {
   display: block;
   width: 100%;
   min-height: 100vh;
-  background-color: var(--BUTTER);
+  min-height: 100dvh;
+  background-color: var(--SAGE);
 }
 
 .contact_container {
@@ -27,7 +28,7 @@
   flex: 1;
 }
 
-.contact_container__content_title > div > div > p {
+.contact_container__content_title>div>div>p {
   margin: 0.9rem 0 0;
   color: var(--MOSS);
   font-size: 2.5rem;
@@ -52,13 +53,13 @@
   gap: 2rem;
 }
 
-.social_network > div > a > img {
+.social_network>div>a>img {
   width: 2rem;
   height: 2rem;
   cursor: pointer;
 }
 
-.social_network > div > a {
+.social_network>div>a {
   width: 2rem;
   height: 2rem;
   display: flex;
@@ -76,7 +77,7 @@ textarea {
   width: 100%;
   margin: 0;
   padding: 0.5rem;
-  border: 0.23rem solid var(--SAGE);
+  border: 0.23rem solid var(--MOSS);
   font: var(--FONT-PRIMARY);
   color: var(--MOSS);
   margin-bottom: 1.1rem;
@@ -92,7 +93,7 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--SAGE);
+  color: var(--MOSS);
 }
 
 input:focus,
@@ -144,8 +145,8 @@ button {
   padding: 0.5rem;
   font: var(--FONT-PRIMARY);
   border: none;
-  color: var(--BUTTER-ACCESSIBLE);
-  background-color: var(--SAGE);
+  color: var(--BUTTER);
+  background-color: var(--MOSS);
   cursor: pointer;
   font-size: 1.45rem;
   line-height: 1;
@@ -163,8 +164,8 @@ button.error {
 }
 
 button:not(.success):not(.error):hover {
-  background-color: var(--MOSS);
-  color: var(--SAGE);
+  background-color: var(--BUTTER);
+  color: var(--MOSS);
 }
 
 .image_group {
@@ -220,7 +221,7 @@ button:not(.success):not(.error):hover {
     align-items: center;
   }
 
-  .contact_container__content_title > div > div > p {
+  .contact_container__content_title>div>div>p {
     text-align: center;
   }
 
