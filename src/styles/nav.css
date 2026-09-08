@@ -1,6 +1,3 @@
-/* Shared nav-link look — reused by the fixed .menu_container nav (about-me,
-   contact, gallery-type) and the gallery homepage's differently-placed nav
-   inside .empty_section (see gallery.css). */
 nav a {
   all: unset;
   cursor: pointer;
