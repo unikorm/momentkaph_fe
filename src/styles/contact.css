@@ -9,13 +9,19 @@ body {
 .contact_container {
   max-width: 1400px;
   width: 100%;
-  height: 100%;
-  padding: 7rem 3rem 3rem;
+  padding: 3rem;
   margin: 0 auto;
+  display: flex;
 }
 
 .contact_container__content {
+  max-width: 1400px;
+  width: 100%;
+  padding: 3rem;
+  margin: 0 auto;
   display: flex;
+  justify-content: space-around;
+  width: 100%;
   height: 100%;
   gap: 8rem;
 }
@@ -172,6 +178,7 @@ button:not(.success):not(.error):hover {
   max-height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .contact-image-container {
@@ -214,7 +221,6 @@ button:not(.success):not(.error):hover {
   .contact_container__content {
     flex-direction: column;
     gap: 5rem;
-    margin-bottom: 4rem;
   }
 
   .contact_container__content_title {
@@ -228,10 +234,14 @@ button:not(.success):not(.error):hover {
   .image_group {
     max-width: 35rem;
   }
+
+  .social_network {
+    margin-bottom: 4rem;
+  }
 }
 
 @media screen and (max-width: 600px) {
   .contact_container {
-    padding: 7rem 2rem 3rem;
+    padding: 3rem 2rem 3rem;
   }
 }
