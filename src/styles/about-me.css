@@ -1,9 +1,17 @@
+body {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--SAGE);
+}
+
 .about_container {
   max-width: 1400px;
-  color: var(--BROWNIE);
+  color: var(--MOSS);
   width: 100%;
   height: 100%;
-  padding: 6rem 3rem 3rem;
+  padding: 3rem 3rem 3rem;
   margin: 0 auto;
 }
 
@@ -35,7 +43,7 @@
   overflow: hidden;
   position: relative;
   margin-top: 4rem;
-  background-color: var(--BROWNIE);
+  background-color: var(--MOSS);
 }
 
 .about-me-image-container img {
@@ -57,13 +65,13 @@
   bottom: 0;
   left: 0;
   font: var(--FONT-PRIMARY);
-  color: var(--LATTE);
+  color: var(--BUTTER);
   font-size: 1.3rem;
   z-index: 1;
 }
 
 @media screen and (max-width: 600px) {
   .about_container {
-    padding: 6rem 2rem 3rem;
+    padding: 3rem 2rem 3rem;
   }
 }

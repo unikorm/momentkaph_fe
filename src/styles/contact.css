@@ -1,21 +1,26 @@
-.contact-page {
-  display: block;
+body {
+  display: flex;
   width: 100%;
   min-height: 100vh;
-  background-color: var(--LATTE);
+  min-height: 100dvh;
+  background-color: var(--SAGE);
+  flex-direction: column;
 }
 
-.contact_container {
-  max-width: 1400px;
-  width: 100%;
-  height: 100%;
-  padding: 7rem 3rem 3rem;
-  margin: 0 auto;
+.menu_container {
+  flex: 0 0 auto;
 }
 
 .contact_container__content {
+  max-width: 1400px;
+  width: 100%;
+  padding: 3rem;
+  margin: 0 auto;
   display: flex;
-  height: 100%;
+  justify-content: space-around;
+  min-height: 0;
+  box-sizing: border-box;
+  flex: 1 1 auto;
   gap: 8rem;
 }
 
@@ -27,9 +32,9 @@
   flex: 1;
 }
 
-.contact_container__content_title > div > div > p {
+.contact_container__content_title>div>div>p {
   margin: 0.9rem 0 0;
-  color: var(--BROWNIE);
+  color: var(--MOSS);
   font-size: 2.5rem;
 }
 
@@ -52,13 +57,13 @@
   gap: 2rem;
 }
 
-.social_network > div > a > img {
+.social_network>div>a>img {
   width: 2rem;
   height: 2rem;
   cursor: pointer;
 }
 
-.social_network > div > a {
+.social_network>div>a {
   width: 2rem;
   height: 2rem;
   display: flex;
@@ -76,9 +81,9 @@ textarea {
   width: 100%;
   margin: 0;
   padding: 0.5rem;
-  border: 0.23rem solid var(--TOFFEE);
+  border: 0.23rem solid var(--MOSS);
   font: var(--FONT-PRIMARY);
-  color: var(--BROWNIE);
+  color: var(--MOSS);
   margin-bottom: 1.1rem;
   background-color: transparent;
   font-size: 1.45rem;
@@ -92,13 +97,13 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--TOFFEE);
+  color: var(--MOSS);
 }
 
 input:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--BROWNIE);
+  border-color: var(--MOSS);
 }
 
 form.submitted input:invalid,
@@ -111,7 +116,7 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: transparent !important;
-  -webkit-text-fill-color: var(--BROWNIE) !important;
+  -webkit-text-fill-color: var(--MOSS) !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -144,8 +149,8 @@ button {
   padding: 0.5rem;
   font: var(--FONT-PRIMARY);
   border: none;
-  color: var(--LATTE-ACCESSIBLE);
-  background-color: var(--TOFFEE);
+  color: var(--BUTTER);
+  background-color: var(--MOSS);
   cursor: pointer;
   font-size: 1.45rem;
   line-height: 1;
@@ -163,14 +168,15 @@ button.error {
 }
 
 button:not(.success):not(.error):hover {
-  background-color: var(--BROWNIE);
-  color: var(--TOFFEE);
+  background-color: var(--BUTTER);
+  color: var(--MOSS);
 }
 
 .image_group {
   max-height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .contact-image-container {
@@ -178,7 +184,7 @@ button:not(.success):not(.error):hover {
   width: fit-content;
   overflow: hidden;
   position: relative;
-  background-color: var(--BROWNIE);
+  background-color: var(--MOSS);
 }
 
 .contact-image-container img {
@@ -200,7 +206,7 @@ button:not(.success):not(.error):hover {
   bottom: 0;
   left: 0;
   font: var(--FONT-PRIMARY);
-  color: var(--LATTE);
+  color: var(--BUTTER);
   font-size: 1.3rem;
   z-index: 1;
 }
@@ -213,24 +219,27 @@ button:not(.success):not(.error):hover {
   .contact_container__content {
     flex-direction: column;
     gap: 5rem;
-    margin-bottom: 4rem;
   }
 
   .contact_container__content_title {
     align-items: center;
   }
 
-  .contact_container__content_title > div > div > p {
+  .contact_container__content_title>div>div>p {
     text-align: center;
   }
 
   .image_group {
     max-width: 35rem;
   }
+
+  .social_network {
+    margin-bottom: 4rem;
+  }
 }
 
 @media screen and (max-width: 600px) {
   .contact_container {
-    padding: 7rem 2rem 3rem;
+    padding: 3rem 2rem 3rem;
   }
 }

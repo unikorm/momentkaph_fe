@@ -1,11 +1,8 @@
-/* Shared nav-link look — reused by the fixed .menu_container nav (about-me,
-   contact, gallery-type) and the gallery homepage's differently-placed nav
-   inside .empty_section (see gallery.css). */
 nav a {
   all: unset;
   cursor: pointer;
-  color: var(--LATTE-ACCESSIBLE);
-  font-size: 1.3rem;
+  color: var(--BUTTER);
+  font-size: 1.4rem;
   letter-spacing: 1px;
   line-height: 1;
 }
@@ -22,12 +19,9 @@ nav a.activeLink {
   width: 100%;
   display: flex;
   justify-content: center;
-  background-color: var(--TOFFEE);
+  background-color: var(--SAGE);
   padding: 0;
   margin: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
   z-index: 3;
 }
 

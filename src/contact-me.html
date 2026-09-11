@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+  <meta charset="utf-8">
+  <title>kontaktuj ma</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/favicon.ico">
+  <link rel="preload" href="fonts/CaveatReg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles/global.css">
+  <link rel="stylesheet" href="styles/nav.css">
+  <link rel="stylesheet" href="styles/contact.css">
+  <script type="module" src="js/lang.js"></script>
+</head>
+
+<body>
+  <div class="menu_container">
+    <nav>
+      <a href="about-me.html" data-i18n="nav.aboutMe">O mne</a>
+      <a href="index.html" data-i18n="nav.gallery">Galéria</a>
+      <a href="contact-me.html" class="activeLink" data-i18n="nav.contact">Kontakt</a>
+    </nav>
+  </div>
+  <div class="contact_container__content">
+    <div class="contact_container__content_title">
+      <div class="image_group">
+        <div class="contact-image-container">
+          <img src="assets/contact_photo.avif" alt="to som ja">
+          <span data-i18n="common.thatsMe">to som ja</span>
+        </div>
+        <div style="width: 100%">
+          <p data-i18n="contact.contactMe">kontaktuj ma</p>
+        </div>
+      </div>
+    </div>
+    <div class="contact_container__content_form">
+      <form action="/email_sending" method="post">
+        <div class="box">
+          <input id="name" name="name" type="text" required data-i18n-ph="contact.form.name.placeholder"
+            placeholder="Tvoje meno">
+          <span class="error-message" data-i18n="contact.form.name.error">Príliš krátke...</span>
+        </div>
+        <div class="box">
+          <input id="email" name="email" type="email" required data-i18n-ph="contact.form.email.placeholder"
+            placeholder="Tvoj email">
+          <span class="error-message" data-i18n="contact.form.email.error">Prosím zadaj platný email...</span>
+        </div>
+        <div class="box">
+          <input id="phone" name="phone" type="tel" required data-i18n-ph="contact.form.phone.placeholder"
+            placeholder="Tvoje tel. číslo">
+          <span class="error-message" data-i18n="contact.form.phone.error">Prosím zadaj platné telefónne
+            číslo...</span>
+        </div>
+        <div class="box">
+          <textarea id="message" name="message" rows="3" required minlength="20" maxlength="700"
+            data-i18n-ph="contact.form.message.placeholder" placeholder="Správa pre mňa..."></textarea>
+          <span class="error-message" data-i18n="contact.form.message.error">Príliš krátke alebo dlhé...</span>
+        </div>
+        <button type="submit" data-i18n="contact.form.button.idle">Odoslať správu</button>
+      </form>
+      <p class="or" data-i18n="contact.or">ALEBO</p>
+      <div class="social_network">
+        <div><a href="https://www.instagram.com/momentka.ph/" target="_blank" rel="noopener"><img
+              src="assets/instagram.svg" alt="Instagram"></a></div>
+        <div><a href="https://m.me/" target="_blank" rel="noopener"><img src="assets/messenger.svg" alt="Messenger"></a>
+        </div>
+        <div><a href="https://wa.me/421951775896" target="_blank" rel="noopener"><img src="assets/whatsapp.svg"
+              alt="WhatsApp"></a></div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -3,7 +3,8 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Momentkaph</title>
+  <title>momentkaph</title>
+  <base href="/" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="description"
@@ -17,33 +18,90 @@
   <meta property="og:title" content="momentka.ph | Anna Lednicka">
   <meta property="og:description"
     content="Fotografka, ktorá zachytí tvoje najkrajšie momenty. Fotenie svadieb, rodín a detí, novorodencov, tehotenské, portréty, atď.">
-  <meta property="og:image" content="https://momentkaph.sk/assets/about_photo.avif">
+  <meta property="og:image" content="https://momentkaph.sk/sk/assets/about_photo.avif">
   <meta property="og:image:width" content="800">
   <meta property="og:image:height" content="797">
   <meta property="og:site_name" content="momentka.ph | Anna Lednicka">
 
-  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
-  <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
-  <link rel="manifest" href="/assets/site.webmanifest">
-  <link rel="preload" href="/fonts/CaveatReg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/android-chrome-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="manifest" href="assets/site.webmanifest">
+  <link rel="preload" href="fonts/CaveatReg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="/styles/global.css">
-  <link rel="stylesheet" href="/styles/nav.css">
-  <link rel="stylesheet" href="/styles/main-layout.css">
-  <link rel="stylesheet" href="/styles/not-found.css">
-  <link rel="stylesheet" href="/styles/about-me.css">
-  <link rel="stylesheet" href="/styles/gallery.css">
-  <link rel="stylesheet" href="/styles/gallery-type.css">
-  <link rel="stylesheet" href="/styles/contact.css">
+  <link rel="stylesheet" href="styles/global.css">
+  <link rel="stylesheet" href="styles/index.css">
+  <link rel="stylesheet" href="styles/nav.css">
+  <script type="module" src="js/lang.js"></script>
 </head>
 
 <body>
-  <div id="app"></div>
-  <script type="module" src="/main.js"></script>
-</body>
+  <div class="photo_grid">
+    <div class="grid_item weddings">
+      <a class="image_container" href="gallery.html?type=weddings">
+        <img src="assets/gallery_weddings.avif" alt="Svadby" loading="lazy">
+        <span data-i18n="gallery.tile.weddings">Svadby</span>
+      </a>
+    </div>
+    <div class="grid_item empty">
+      <div class="empty_section">
+        <nav>
+          <a href="about-me.html" data-i18n="nav.aboutMe">O mne</a>
+          <a href="index.html" class="activeLink" data-i18n="nav.gallery">Galéria</a>
+          <a href="contact-me.html" data-i18n="nav.contact">Kontakt</a>
+        </nav>
+        <img src="assets/about_photo.avif" alt="to som ja">
+      </div>
+    </div>
+    <div class="grid_item love-story">
+      <a class="image_container" href="gallery.html?type=love-story">
+        <img src="assets/gallery_love-story.avif" alt="Príbehy lásky" loading="lazy">
+        <span data-i18n="gallery.tile.loveStory">Príbehy lásky</span>
+      </a>
+    </div>
+    <div>
+      <div class="grid_item pregnancy">
+        <a class="image_container" href="gallery.html?type=pregnancy">
+          <img src="assets/gallery_pregnancy.avif" alt="Tehuľky" loading="lazy">
+          <span data-i18n="gallery.tile.pregnancy">Tehuľky</span>
+        </a>
+      </div>
+      <div class="grid_item studio">
+        <a class="image_container" href="gallery.html?type=studio">
+          <img src="assets/gallery_studio.avif" alt="Ateliér" loading="lazy">
+          <span data-i18n="gallery.tile.studio">Ateliér</span>
+        </a>
+      </div>
+    </div>
+    <div>
+      <div class="grid_item family">
+        <a class="image_container" href="gallery.html?type=family">
+          <img src="assets/gallery_family.avif" alt="Rodina" loading="lazy">
+          <span data-i18n="gallery.tile.family">Rodina</span>
+        </a>
+      </div>
+      <div class="grid_item babies">
+        <a class="image_container" href="gallery.html?type=babies">
+          <img src="assets/gallery_babies.avif" alt="Bábätká" loading="lazy">
+          <span data-i18n="gallery.tile.babies">Bábätká</span>
+        </a>
+      </div>
+    </div>
+    <div class="grid_item portrait">
+      <a class="image_container" href="gallery.html?type=portrait">
+        <img src="assets/gallery_portrait.avif" alt="Portréty" loading="lazy">
+        <span data-i18n="gallery.tile.portrait">Portréty</span>
+      </a>
+    </div>
+  </div>
 
+  <div class="language_switcher">
+    <button type="button" data-lang="sk">SK</button>
+    <button type="button" data-lang="en">EN</button>
+    <button type="button" data-lang="uk">UA</button>
+  </div>
+</body>
 </html>
