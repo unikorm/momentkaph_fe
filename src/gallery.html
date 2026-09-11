@@ -3,13 +3,14 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Galéria | momentka.ph</title>
+  <title>Galéria</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="assets/favicon.ico">
   <link rel="preload" href="fonts/CaveatReg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="stylesheet" href="styles/global.css">
   <link rel="stylesheet" href="styles/nav.css">
   <link rel="stylesheet" href="styles/gallery.css">
+  <script type="module" src="js/gallery.js"></script>
   <script type="module" src="js/lang.js"></script>
 </head>
 
@@ -17,187 +18,165 @@
   <div class="menu_container">
     <nav>
       <a href="about-me.html" data-i18n="nav.aboutMe">O mne</a>
-      <a href="index.html" class="activeLink" data-i18n="nav.gallery">Galéria</a>
+      <a href="index.html" class="activeLink" aria-current="page" data-i18n="nav.gallery">Galéria</a>
       <a href="contact-me.html" data-i18n="nav.contact">Kontakt</a>
     </nav>
   </div>
+
   <div class="gallery-container">
     <div class="title-for-gallery">
-      <img [src]="'assets/gallery_' + type() + '.avif'" alt="title of gallery"
-        [class.adjusted-title]="type() === 'portrait' || type() === 'love-story'"
-        [class.pregnancy-title]="type() === 'pregnancy'" />
-      @switch (type()) {
-      @case ('babies') {
-      <h1 i18n>Bábätká</h1>
-      }
-      @case ('weddings') {
-      <h1 i18n>Svadby</h1>
-      }
-      @case ('portrait') {
-      <h1 i18n>Portréty</h1>
-      }
-      @case ('love-story') {
-      <h1 i18n>Príbehy lásky</h1>
-      }
-      @case ('family') {
-      <h1 i18n>Rodina</h1>
-      }
-      @case ('studio') {
-      <h1 i18n>Ateliér</h1>
-      }
-      @case ('pregnancy') {
-      <h1 i18n>Tehuľky</h1>
-      }
-      }
+      <img class="hero" src="" alt="">
+      <h1 class="title"></h1>
     </div>
 
-    @if (type() === "weddings" || type() === "babies") {
-    <div class="description-for-gallery" [style.padding-bottom]="(type() === 'babies') ? '0' : null">
-      @if (type() === "babies") {
-      <div class="selection-of-babies-variant">
-        <a routerLink="../baptism" routerLinkActive="activeLinkSection" ariaCurrentWhenActive="page" i18n>Krsty</a>
-        <a routerLink="../newborn" routerLinkActive="activeLinkSection" ariaCurrentWhenActive="page"
-          i18n>Novorodenci</a>
-      </div>
-      }
-      @if (type() === "weddings") {
-      <div class="description" [style.padding-top]="(type() === 'baptism' || type() === 'newborn') ? '0' : null">
-        <div class="headlineOfTextInDescription" i18n>Svadobná fotografia — to je viac než len obyčajný obrázok.</div>
-        <div class="contentOfTextInDescription" i18n> Je to spomienka na váš výnimočný deň, plná emócií, lásky a
-          radosti.
-          Mojím
-          cieľom je zachytiť prirodzené momenty, nežné dotyky a aj tie najmenšie detaily, ktoré spolu vytvárajú váš
-          jedinečný príbeh.</div>
-        <div class="headlineOfTextInDescription" i18n>Ako to prebieha?</div>
-        <div class="contentOfTextInDescription" i18n>Približne mesiac pred svadbou sa stretneme, aby sme spoločne prešli
-          harmonogram dňa, vaše priania a dôležité momenty, ktoré chcete mať zachytené na fotografiách. Takáto príprava
-          pomáha urobiť svadobný deň pokojnejším a príjemnejším — vy si ho môžete naplno užiť bez zbytočného stresu.
-        </div>
-        <div class="headlineOfTextInDescription" i18n>Skvelé odporúčanie — predsvadobné fotenie (tzv. "love story")
-        </div>
-        <div class="contentOfTextInDescription" i18n>Počas tohto krátkeho a uvoľneného fotenia zažijete, ako prebieha
-          spolupráca
-          so mnou, a zároveň vzniknú krásne fotografie, ktoré môžete použiť na svadbe — v oznámeniach, výzdobe alebo ako
-          prezentáciu. Po fotení si spolu sadneme, prejdeme všetky detaily, vaše očakávania a doladíme harmonogram dňa.
-          Tento zážitok nám pomôže lepšie sa spoznať, čo výrazne znižuje stres počas svadobného dňa — aspoň v tomto
-          smere
-          sa budete cítiť uvoľnenejšie.</div>
-      </div>
-      <div class="arrow-wrapper">
-        <img src="assets/arrow.svg" alt="arrow" class="arrow-left" [class.disabled]="isAtStart()"
-          (click)="navigateToPreviousTip()" />
-        <img src="assets/arrow-smaller.svg" alt="arrow-smaller" class="arrow-smaller-left"
-          [class.disabled]="isAtStart()" (click)="navigateToPreviousTip()" />
-        <div class="gallery-tips">
-          <div class="tip">
-            <span class="tip-number">---</span>
-            <div>
-              <div class="headlineOfTipInDescription" i18n>Pripravte si detaily dopredu.</div>
-              <div class="contentOfTipInDescription" i18n>Prstienky, pozvánky, parfum, topánky či svadobnú kyticu si
-                pripravte
-                na jedno miesto. Ušetríme čas a ja ich môžem krásne nafotiť ešte pred obliekaním.</div>
-            </div>
-            <span class="tip-number">---</span>
-          </div>
-          <div class="tip">
-            <span class="tip-number">---</span>
-            <div>
-              <div class="headlineOfTipInDescription" i18n>Zastavte sa.</div>
-              <div class="contentOfTipInDescription" i18n>Počas dňa si vedome doprajte chvíľku len pre seba. Uvedomte
-                si,
-                že
-                ten deň je o vás dvoch – nie len o programe. Tie najkrajšie momenty vznikajú práve v týchto tichých,
-                úprimných okamihoch.</div>
-            </div>
-            <span class="tip-number">---</span>
-          </div>
-          <div class="tip">
-            <span class="tip-number">---</span>
-            <div>
-              <div class="headlineOfTipInDescription" i18n>Nechajte si viac času na prípravy.</div>
-              <div class="contentOfTipInDescription" i18n>Ráno vždy letí rýchlejšie, ako sa zdá. Zarezervujte si aspoň o
-                15–20
-                minút viac, ako si myslíte, že potrebujete – pre pokoj a pohodu.</div>
-            </div>
-            <span class="tip-number">---</span>
-          </div>
-          <div class="tip">
-            <span class="tip-number">---</span>
-            <div>
-              <div class="headlineOfTipInDescription" i18n>Nebojte sa emócií.</div>
-              <div class="contentOfTipInDescription" i18n>Plač, smiech, objatia – to všetko tvorí silné a nezabudnuteľné
-                fotografie a zábery. Byť autentický = byť krásny.</div>
-            </div>
-            <span class="tip-number">---</span>
-          </div>
-          <div class="tip">
-            <span class="tip-number">---</span>
-            <div>
-              <div class="headlineOfTipInDescription" i18n>Dôverujte svojmu fotografovi.</div>
-              <div class="contentOfTipInDescription" i18n>Niektoré pózy alebo miesta môžu na prvý pohľad pôsobiť
-                zvláštne,
-                ale
-                výsledok bude stáť za to. Niekedy ten najnudnejší múr dá najkrajšiu fotku.</div>
-            </div>
-            <span class="tip-number">---</span>
-          </div>
-          <div class="tip">
-            <span class="tip-number">---</span>
-            <div>
-              <div class="headlineOfTipInDescription" i18n>Zlatá hodina je váš priateľ.</div>
-              <div class="contentOfTipInDescription" i18n>Plánujte párové fotenie na čas pred západom slnka – svetlo
-                bude
-                mäkké, teplé a veľmi lichotivé.</div>
-            </div>
-            <span class="tip-number">---</span>
-          </div>
-          <div class="tip">
-            <span class="tip-number">---</span>
-            <div>
-              <div class="headlineOfTipInDescription" i18n>Majte plán B.</div>
-              <div class="contentOfTipInDescription" i18n>Ak svadba je vonku, myslite aj na dáždniky, prístrešok alebo
-                alternatívnu lokalitu – aby vás počasie nezaskočilo.</div>
-            </div>
-            <span class="tip-number">---</span>
-          </div>
-          <div class="tip">
-            <span class="tip-number">---</span>
-            <div>
-              <div class="headlineOfTipInDescription" i18n>Foťme aj s hosťami.</div>
-              <div class="contentOfTipInDescription" i18n>Nezabudnite si vytvoriť zoznam ľudí, s ktorými chcete spoločnú
-                fotku.
-                V svadobnom zhone sa ľahko na niekoho zabudne.</div>
-            </div>
-            <span class="tip-number">---</span>
-          </div>
-        </div>
-        <img src="assets/arrow.svg" alt="arrow" class="arrow-right" [class.disabled]="isAtEnd()"
-          (click)="navigateToNextTip()" />
-        <img src="assets/arrow-smaller.svg" alt="arrow-smaller" [class.disabled]="isAtEnd()" class="arrow-smaller-right"
-          (click)="navigateToNextTip()" />
-      </div>
-      }
-    </div>
-    }
+    <div class="description-for-gallery" hidden>
 
-    <div class="error-message">
+      <div class="selection-of-babies-variant" hidden>
+        <a href="gallery.html?type=baptism" data-gallery-type="baptism"
+          data-i18n="galleryType.babies.baptism">Krsty</a>
+        <a href="gallery.html?type=newborn" data-gallery-type="newborn"
+          data-i18n="galleryType.babies.newborn">Novorodenci</a>
+      </div>
+
+      <div class="weddings-description" hidden>
+        <div class="description">
+          <div class="headlineOfTextInDescription" data-i18n="galleryType.weddings.intro.headline">Svadobná fotografia —
+            to je viac než len obyčajný obrázok.</div>
+          <div class="contentOfTextInDescription" data-i18n="galleryType.weddings.intro.text">Je to spomienka na váš
+            výnimočný deň, plná emócií, lásky a radosti. Mojím cieľom je zachytiť prirodzené momenty, nežné dotyky a aj
+            tie najmenšie detaily, ktoré spolu vytvárajú váš jedinečný príbeh.</div>
+
+          <div class="headlineOfTextInDescription" data-i18n="galleryType.weddings.process.headline">Ako to prebieha?
+          </div>
+          <div class="contentOfTextInDescription" data-i18n="galleryType.weddings.process.text">Približne mesiac pred
+            svadbou sa stretneme, aby sme spoločne prešli harmonogram dňa, vaše priania a dôležité momenty, ktoré chcete
+            mať zachytené na fotografiách. Takáto príprava pomáha urobiť svadobný deň pokojnejším a príjemnejším — vy si
+            ho môžete naplno užiť bez zbytočného stresu.</div>
+
+          <div class="headlineOfTextInDescription" data-i18n="galleryType.weddings.loveStory.headline">Skvelé odporúčanie
+            — predsvadobné fotenie (tzv. „love story“)</div>
+          <div class="contentOfTextInDescription" data-i18n="galleryType.weddings.loveStory.text">Počas tohto krátkeho a
+            uvoľneného fotenia zažijete, ako prebieha spolupráca so mnou, a zároveň vzniknú krásne fotografie, ktoré
+            môžete použiť na svadbe — v oznámeniach, výzdobe alebo ako prezentáciu. Po fotení si spolu sadneme, prejdeme
+            všetky detaily, vaše očakávania a doladíme harmonogram dňa. Tento zážitok nám pomôže lepšie sa spoznať, čo
+            výrazne znižuje stres počas svadobného dňa — aspoň v tomto smere sa budete cítiť uvoľnenejšie.</div>
+        </div>
+
+        <div class="arrow-wrapper">
+          <img src="assets/arrow.svg" alt="" class="arrow-left">
+          <img src="assets/arrow-smaller.svg" alt="" class="arrow-smaller-left">
+
+          <div class="gallery-tips">
+            <div class="tip">
+              <span class="tip-number">---</span>
+              <div>
+                <div class="headlineOfTipInDescription" data-i18n="galleryType.weddings.tip.details.headline">Pripravte
+                  si detaily dopredu.</div>
+                <div class="contentOfTipInDescription" data-i18n="galleryType.weddings.tip.details.text">Prstienky,
+                  pozvánky, parfum, topánky či svadobnú kyticu si pripravte na jedno miesto. Ušetríme čas a ja ich môžem
+                  krásne nafotiť ešte pred obliekaním.</div>
+              </div>
+              <span class="tip-number">---</span>
+            </div>
+
+            <div class="tip">
+              <span class="tip-number">---</span>
+              <div>
+                <div class="headlineOfTipInDescription" data-i18n="galleryType.weddings.tip.pause.headline">Zastavte sa.
+                </div>
+                <div class="contentOfTipInDescription" data-i18n="galleryType.weddings.tip.pause.text">Počas dňa si
+                  vedome doprajte chvíľku len pre seba. Uvedomte si, že ten deň je o vás dvoch – nie len o programe. Tie
+                  najkrajšie momenty vznikajú práve v týchto tichých, úprimných okamihoch.</div>
+              </div>
+              <span class="tip-number">---</span>
+            </div>
+
+            <div class="tip">
+              <span class="tip-number">---</span>
+              <div>
+                <div class="headlineOfTipInDescription" data-i18n="galleryType.weddings.tip.time.headline">Nechajte si
+                  viac času na prípravy.</div>
+                <div class="contentOfTipInDescription" data-i18n="galleryType.weddings.tip.time.text">Ráno vždy letí
+                  rýchlejšie, ako sa zdá. Zarezervujte si aspoň o 15–20 minút viac, ako si myslíte, že potrebujete – pre
+                  pokoj a pohodu.</div>
+              </div>
+              <span class="tip-number">---</span>
+            </div>
+
+            <div class="tip">
+              <span class="tip-number">---</span>
+              <div>
+                <div class="headlineOfTipInDescription" data-i18n="galleryType.weddings.tip.emotions.headline">Nebojte
+                  sa emócií.</div>
+                <div class="contentOfTipInDescription" data-i18n="galleryType.weddings.tip.emotions.text">Plač, smiech,
+                  objatia – to všetko tvorí silné a nezabudnuteľné fotografie a zábery. Byť autentický = byť krásny.
+                </div>
+              </div>
+              <span class="tip-number">---</span>
+            </div>
+
+            <div class="tip">
+              <span class="tip-number">---</span>
+              <div>
+                <div class="headlineOfTipInDescription" data-i18n="galleryType.weddings.tip.trust.headline">Dôverujte
+                  svojmu fotografovi.</div>
+                <div class="contentOfTipInDescription" data-i18n="galleryType.weddings.tip.trust.text">Niektoré pózy
+                  alebo miesta môžu na prvý pohľad pôsobiť zvláštne, ale výsledok bude stáť za to. Niekedy ten
+                  najnudnejší múr dá najkrajšiu fotku.</div>
+              </div>
+              <span class="tip-number">---</span>
+            </div>
+
+            <div class="tip">
+              <span class="tip-number">---</span>
+              <div>
+                <div class="headlineOfTipInDescription" data-i18n="galleryType.weddings.tip.goldenHour.headline">Zlatá
+                  hodina je váš priateľ.</div>
+                <div class="contentOfTipInDescription" data-i18n="galleryType.weddings.tip.goldenHour.text">Plánujte
+                  párové fotenie na čas pred západom slnka – svetlo bude mäkké, teplé a veľmi lichotivé.</div>
+              </div>
+              <span class="tip-number">---</span>
+            </div>
+
+            <div class="tip">
+              <span class="tip-number">---</span>
+              <div>
+                <div class="headlineOfTipInDescription" data-i18n="galleryType.weddings.tip.planB.headline">Majte plán B.
+                </div>
+                <div class="contentOfTipInDescription" data-i18n="galleryType.weddings.tip.planB.text">Ak svadba je
+                  vonku, myslite aj na dáždniky, prístrešok alebo alternatívnu lokalitu – aby vás počasie nezaskočilo.
+                </div>
+              </div>
+              <span class="tip-number">---</span>
+            </div>
+
+            <div class="tip">
+              <span class="tip-number">---</span>
+              <div>
+                <div class="headlineOfTipInDescription" data-i18n="galleryType.weddings.tip.guests.headline">Foťme aj s
+                  hosťami.</div>
+                <div class="contentOfTipInDescription" data-i18n="galleryType.weddings.tip.guests.text">Nezabudnite si
+                  vytvoriť zoznam ľudí, s ktorými chcete spoločnú fotku. V svadobnom zhone sa ľahko na niekoho zabudne.
+                </div>
+              </div>
+              <span class="tip-number">---</span>
+            </div>
+          </div>
+
+          <img src="assets/arrow.svg" alt="" class="arrow-right">
+          <img src="assets/arrow-smaller.svg" alt="" class="arrow-smaller-right">
+        </div>
+      </div>
+    </div>
+
+    <div class="error-message" id="error-message" hidden>
       <p class="error">404</p>
-      <p i18n>Niečo sa nám pokazilo, ADMIN už o chybe vie a pracuje na jej vyriešení, skúste to o pár hodín opäť prosím
-      </p>
+      <p data-i18n="galleryType.error.text">Niečo sa nám pokazilo, ADMIN už o chybe vie a pracuje na jej vyriešení,
+        skúste to o pár hodín opäť prosím</p>
     </div>
 
-    <div class="image-grid">
-      @for (column of columnImages(); track column.columnIndex) {
-      <div class="image-column">
-        @for (image of column.images; track image.originalFullUrl) {
-        <div class="image-card" [style.aspect-ratio]="image.aspectRatio">
-          <img [src]="image.url" [attr.width]="image.width  || null" [attr.height]="image.height || null" loading="lazy"
-            alt="some photo of actual section" />
-        </div>
-        }
-      </div>
-      }
-    </div>
+    <div class="image-grid" id="image-grid" hidden></div>
+  </div>
 </body>
 
 </html>

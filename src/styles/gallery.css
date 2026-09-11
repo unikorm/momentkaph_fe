@@ -4,6 +4,12 @@ body {
   background-color: var(--BUTTER);
 }
 
+.menu_container {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
 .gallery-container {
   width: 100%;
   max-width: 2000px;
