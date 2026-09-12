@@ -1,7 +1,7 @@
 /** Contact form. The browser does the validating; we just send it. */
 const form = document.querySelector('form');
 const button = form.querySelector('button');
-const API = 'https://api.momentkaph.sk';
+const API = location.hostname === 'localhost' ? 'http://localhost:3069' : 'https://api.momentkaph.sk';
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
