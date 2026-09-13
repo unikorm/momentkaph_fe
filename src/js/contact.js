@@ -1,24 +1,40 @@
-/** Contact form. The browser does the validating; we just send it. */
-const form = document.querySelector('form');
+const form = document.getElementById('contact-form');
 const button = form.querySelector('button');
 const API = location.hostname === 'localhost' ? 'http://localhost:3069' : 'https://api.momentkaph.sk';
 
+const LABELS = {
+  idle: 'Odoslať správu',
+  sending: 'Odosielam...',
+  success: 'Správa odoslaná!',
+  error: 'Niečo sa pokazilo!',
+};
+let resetTimer;
+
+function setStatus(status) {
+  button.className = status === 'idle' ? '' : status;
+  button.textContent = LABELS[status];
+  clearTimeout(resetTimer);
+  if (status === 'success' || status === 'error') {
+    resetTimer = setTimeout(() => setStatus('idle'), 3000);
+  }
+}
+
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
-  form.classList.add('submitted');
-  if (!form.checkValidity()) return;
-
-  button.textContent = 'Odosielam...';
+  setStatus('sending');
+  button.disabled = true;
   try {
     const res = await fetch(`${API}/email_sending`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(Object.fromEntries(new FormData(form))),
     });
-    button.textContent = res.ok ? 'Správa odoslaná!' : 'Niečo sa pokazilo!';
-    if (res.ok) form.reset();
+    setStatus(res.ok ? 'success' : 'error');
   } catch {
-    button.textContent = 'Niečo sa pokazilo!';
+    setStatus('error');
+  } finally {
+    form.reset();
+    form.classList.remove('submitted');
+    button.disabled = false;
   }
-  form.classList.remove('submitted');
 });

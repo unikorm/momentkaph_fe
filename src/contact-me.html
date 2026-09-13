@@ -10,7 +10,8 @@
   <link rel="stylesheet" href="styles/global.css">
   <link rel="stylesheet" href="styles/nav.css">
   <link rel="stylesheet" href="styles/contact.css">
-  <script type="module" src="js/lang.js"></script>
+  <script type="module" src="js/contact.js"></script>
+  <!-- <script type="module" src="js/lang.js"></script> -->
 </head>
 
 <body>
@@ -34,27 +35,22 @@
       </div>
     </div>
     <div class="contact_container__content_form">
-      <form action="/email_sending" method="post">
+      <form id="contact-form">
         <div class="box">
-          <input id="name" name="name" type="text" required data-i18n-ph="contact.form.name.placeholder"
-            placeholder="Tvoje meno">
-          <span class="error-message" data-i18n="contact.form.name.error">Príliš krátke...</span>
+          <input id="name" name="name" type="text" required minlength="3" maxlength="100" placeholder="Tvoje meno"
+            data-i18n-ph="contact.form.name.placeholder">
         </div>
         <div class="box">
-          <input id="email" name="email" type="email" required data-i18n-ph="contact.form.email.placeholder"
-            placeholder="Tvoj email">
-          <span class="error-message" data-i18n="contact.form.email.error">Prosím zadaj platný email...</span>
+          <input id="email" name="email" type="email" required placeholder="Tvoj email"
+            data-i18n-ph="contact.form.email.placeholder">
         </div>
         <div class="box">
-          <input id="phone" name="phone" type="tel" required data-i18n-ph="contact.form.phone.placeholder"
-            placeholder="Tvoje tel. číslo">
-          <span class="error-message" data-i18n="contact.form.phone.error">Prosím zadaj platné telefónne
-            číslo...</span>
+          <input id="phone" name="phone" type="tel" required pattern="\+?[0-9\s\-]{10,}" placeholder="Tvoje tel. číslo"
+            data-i18n-ph="contact.form.phone.placeholder">
         </div>
         <div class="box">
           <textarea id="message" name="message" rows="3" required minlength="20" maxlength="700"
-            data-i18n-ph="contact.form.message.placeholder" placeholder="Správa pre mňa..."></textarea>
-          <span class="error-message" data-i18n="contact.form.message.error">Príliš krátke alebo dlhé...</span>
+            placeholder="Správa pre mňa..." data-i18n-ph="contact.form.message.placeholder"></textarea>
         </div>
         <button type="submit" data-i18n="contact.form.button.idle">Odoslať správu</button>
       </form>
