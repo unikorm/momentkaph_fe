@@ -1,74 +1,82 @@
 const COLUMN_COUNT = 3;
 
-const API_BASE = 'https://api.momentkaph.sk';
+const API = location.hostname === 'localhost' ? 'http://localhost:3069' : 'https://api.momentkaph.sk';;
 
+// `title` is the Slovak fallback until lang.js exists; `titleKey` is for later.
 const GALLERY_TYPES = {
   weddings: {
     photo: 'gallery_weddings.avif',
+    title: 'Svadby',
     titleKey: 'galleryType.title.weddings',
     heroClass: null,
     section: 'weddings',
   },
   'love-story': {
     photo: 'gallery_love-story.avif',
+    title: 'Príbehy lásky',
     titleKey: 'galleryType.title.loveStory',
     heroClass: 'adjusted-title',
     section: null,
   },
   portrait: {
     photo: 'gallery_portrait.avif',
+    title: 'Portréty',
     titleKey: 'galleryType.title.portrait',
     heroClass: 'adjusted-title',
     section: null,
   },
   pregnancy: {
     photo: 'gallery_pregnancy.avif',
+    title: 'Tehuľky',
     titleKey: 'galleryType.title.pregnancy',
     heroClass: 'pregnancy-title',
     section: null,
   },
   studio: {
     photo: 'gallery_studio.avif',
+    title: 'Ateliér',
     titleKey: 'galleryType.title.studio',
     heroClass: null,
     section: null,
   },
   family: {
     photo: 'gallery_family.avif',
+    title: 'Rodina',
     titleKey: 'galleryType.title.family',
     heroClass: null,
     section: null,
   },
   baptism: {
     photo: 'gallery_babies.avif',
+    title: 'Bábätká',
     titleKey: 'galleryType.title.babies',
     heroClass: null,
     section: 'babies',
   },
   newborn: {
     photo: 'gallery_babies.avif',
+    title: 'Bábätká',
     titleKey: 'galleryType.title.babies',
     heroClass: null,
     section: 'babies',
-  },
+  }
 };
 
+// Selectors now match gallery.html exactly.
 const els = {
-  hero: document.querySelector('.photo'),
-  title: document.querySelector('.title'),
+  hero: document.querySelector('.title-for-gallery .hero'),
+  title: document.querySelector('.title-for-gallery .title'),
   description: document.querySelector('.description-for-gallery'),
-  babies: document.querySelector('.babies-variants'),
+  babies: document.querySelector('.selection-of-babies-variant'),
   weddings: document.querySelector('.weddings-description'),
-  grid: document.querySelector('.image-grid'),
-  error: document.querySelector('#.error-message'),
+  grid: document.querySelector('#image-grid'),
+  error: document.querySelector('#error-message'),
 };
 
-const type = new URLSearchParams(location.search).get('type');
+const type = new URLSearchParams(location.search).get('type') === 'babies' ? new URLSearchParams(location.search).get('subtype') : new URLSearchParams(location.search).get('type');
 const descriptor = GALLERY_TYPES[type];
 
 if (!descriptor) {
-  // location.replace() does NOT stop the script, so everything else has to sit
-  // in the else branch — this was one reason the old file blew up.
   location.replace('404.html');
 } else {
   renderChrome(descriptor);
@@ -78,21 +86,21 @@ if (!descriptor) {
   loadImages(type).catch(showError);
 }
 
-/** Hero image + heading. Runs synchronously so lang.js can translate the h1. */
-function renderChrome({ hero, titleKey, heroClass }) {
-  els.hero.src = `assets/${hero}`;
+/** Hero image + heading. */
+function renderChrome({ photo, title, titleKey, heroClass }) {
+  els.hero.src = `assets/${photo}`;
   els.hero.alt = '';
   if (heroClass) els.hero.classList.add(heroClass);
 
+  els.title.textContent = title;
   els.title.dataset.i18n = titleKey;
-  // Fallback in case lang.js already ran (e.g. if you ever load it first).
-  document.dispatchEvent(new CustomEvent('i18n:retranslate'));
+  document.title = title;
 }
 
 /** Sub-nav for Krsty / Novorodenci, incl. the active-link marker. */
 function renderBabiesNav(currentType) {
   els.description.hidden = false;
-  els.description.classList.add('is-babies'); // was [style.padding-bottom]="0"
+  els.description.classList.add('is-babies');
   els.babies.hidden = false;
 
   const lang = new URLSearchParams(location.search).get('lang');
@@ -101,12 +109,13 @@ function renderBabiesNav(currentType) {
     const target = link.dataset.galleryType;
     const url = new URL('gallery.html', location.href);
     url.searchParams.set('type', target);
-    if (lang) url.searchParams.set('lang', lang); // don't lose the language
+    if (lang) url.searchParams.set('lang', lang);
     link.href = url.pathname + url.search;
 
     const isActive = target === currentType;
     link.classList.toggle('activeLinkSection', isActive);
     if (isActive) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
   });
 }
 
@@ -123,7 +132,6 @@ function wireTips() {
 
   let index = 0;
 
-  // Derived from the DOM instead of a hardcoded totalTips = 7.
   const sync = () => {
     prevArrows.forEach((a) => a.classList.toggle('disabled', index === 0));
     nextArrows.forEach((a) => a.classList.toggle('disabled', index === tips.length - 1));
@@ -143,25 +151,31 @@ function wireTips() {
   // Keep the arrows honest if the user swipes the strip directly.
   const track = els.weddings.querySelector('.gallery-tips');
   if (track) {
-    track.addEventListener('scroll', () => {
-      const middle = track.scrollLeft + track.clientWidth / 2;
-      index = tips.reduce(
-        (best, tip, i) =>
-          Math.abs(tip.offsetLeft + tip.offsetWidth / 2 - middle) <
-            Math.abs(tips[best].offsetLeft + tips[best].offsetWidth / 2 - middle)
-            ? i
-            : best,
-        0
-      );
-      sync();
-    }, { passive: true });
+    track.addEventListener(
+      'scroll',
+      () => {
+        const middle = track.scrollLeft + track.clientWidth / 2;
+        index = tips.reduce(
+          (best, tip, i) =>
+            Math.abs(tip.offsetLeft + tip.offsetWidth / 2 - middle) <
+              Math.abs(tips[best].offsetLeft + tips[best].offsetWidth / 2 - middle)
+              ? i
+              : best,
+          0
+        );
+        sync();
+      },
+      { passive: true }
+    );
   }
 
   sync();
 }
 
 async function loadImages(galleryType) {
-  const res = await fetch(`${API_BASE}/cloud_storage/${galleryType}`);
+  els.error.hidden = true;
+
+  const res = await fetch(`${API}/cloud_storage/${galleryType}`);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
   const images = await res.json();

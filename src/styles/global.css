@@ -26,6 +26,8 @@ body {
   box-sizing: border-box;
 }
 
+[hidden] { display: none !important; }
+
 @font-face {
   font-family: "Caveat";
   src: url("/fonts/CaveatReg.woff2") format("woff2");

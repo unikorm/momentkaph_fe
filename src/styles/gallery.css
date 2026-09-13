@@ -15,7 +15,6 @@ body {
   max-width: 2000px;
   max-height: 100svh;
   margin: 0 auto;
-  padding-bottom: 10rem;
   overflow-y: scroll;
   scroll-behavior: smooth;
   scroll-snap-type: y proximity !important;
@@ -81,6 +80,10 @@ body {
     max-width: 1564px;
     padding: 8rem 2rem 0;
   }
+}
+
+.description-for-gallery.is-babies {
+  padding-bottom: 0;
 }
 
 .selection-of-babies-variant {
@@ -199,6 +202,7 @@ body {
   padding: 5.1rem 0.8rem 0.4rem;
   display: flex;
   scroll-snap-align: start;
+  padding-bottom: 10rem;
 }
 
 .image-column {
