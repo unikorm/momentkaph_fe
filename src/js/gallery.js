@@ -1,3 +1,5 @@
+import { wireCarousel } from './carousel.js';
+
 const COLUMN_COUNT = 3;
 
 const API = location.hostname === 'localhost' ? 'http://localhost:3069' : 'https://api.momentkaph.sk';
@@ -163,61 +165,16 @@ function showSubtype(next) {
   loadImages(next).catch(showError);
 }
 
-/** The wedding tips carousel — replaces currentTipIndex / isAtStart / isAtEnd. */
+/** Wire up the wedding tips carousel with arrow navigation. */
 function wireTips() {
   els.description.hidden = false;
   els.weddings.hidden = false;
 
-  const tips = [...els.weddings.querySelectorAll('.tip')];
-  if (!tips.length) return;
-
-  const prevArrows = [...els.weddings.querySelectorAll('.arrow-left, .arrow-smaller-left')];
-  const nextArrows = [...els.weddings.querySelectorAll('.arrow-right, .arrow-smaller-right')];
-
-  let index = 0;
-
-  const sync = () => {
-    prevArrows.forEach((a) => a.classList.toggle('disabled', index === 0));
-    nextArrows.forEach((a) => a.classList.toggle('disabled', index === tips.length - 1));
-  };
-
-  const move = (step) => {
-    const next = Math.min(tips.length - 1, Math.max(0, index + step));
-    if (next === index) return;
-    index = next;
-    tips[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    sync();
-  };
-
-  prevArrows.forEach((a) => a.addEventListener('click', () => move(-1)));
-  nextArrows.forEach((a) => a.addEventListener('click', () => move(1)));
-
-  // Keep the arrows honest if the user swipes the strip directly.
   const track = els.weddings.querySelector('.gallery-tips');
-  if (track) {
-    track.addEventListener(
-      'scroll',
-      () => {
-        const middle = track.scrollLeft + track.clientWidth / 2;
-        index = tips.reduce(
-          (best, tip, i) =>
-            Math.abs(tip.offsetLeft + tip.offsetWidth / 2 - middle) <
-              Math.abs(tips[best].offsetLeft + tips[best].offsetWidth / 2 - middle)
-              ? i
-              : best,
-          0
-        );
-        sync();
-      },
-      { passive: true }
-    );
-  }
-
-  sync();
+  if (track) wireCarousel(els.weddings, track, '.tip');
 }
 
 /** Monotonic token so a slow, superseded fetch can't paint over a newer one. */
-
 async function loadImages(galleryType) {
   const token = ++requestToken;
   els.error.hidden = true;
