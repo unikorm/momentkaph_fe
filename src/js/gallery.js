@@ -1,6 +1,6 @@
 const COLUMN_COUNT = 3;
 
-const API = location.hostname === 'localhost' ? 'http://localhost:3069' : 'https://api.momentkaph.sk';;
+const API = location.hostname === 'localhost' ? 'http://localhost:3069' : 'https://api.momentkaph.sk';
 
 const GALLERY_TYPES = {
   weddings: {
@@ -58,10 +58,10 @@ const GALLERY_TYPES = {
     titleKey: 'galleryType.title.babies',
     heroClass: null,
     section: 'babies',
-  }
+  },
 };
 
-// Selectors now match gallery.html exactly.
+// Selectors match gallery.html exactly.
 const els = {
   hero: document.querySelector('.title-for-gallery .hero'),
   title: document.querySelector('.title-for-gallery .title'),
@@ -72,18 +72,39 @@ const els = {
   error: document.querySelector('#error-message'),
 };
 
-const type = new URLSearchParams(location.search).get('type') === 'babies' ? new URLSearchParams(location.search).get('subtype') : new URLSearchParams(location.search).get('type');
-const descriptor = GALLERY_TYPES[type];
+/** ?type=babies&subtype=X → X, otherwise ?type=X → X. */
+function resolveType(search = location.search) {
+  const params = new URLSearchParams(search);
+  return params.get('type') === 'babies' ? params.get('subtype') : params.get('type');
+}
+
+/** The gallery type currently shown in the grid. */
+let activeType = resolveType();
+let requestToken = 0;
+const descriptor = GALLERY_TYPES[activeType];
 
 if (!descriptor) {
   location.replace('404.html');
 } else {
   renderChrome(descriptor);
-  if (descriptor.section === 'babies') renderBabiesNav(type);
+  if (descriptor.section === 'babies') renderBabiesNav(activeType);
   if (descriptor.section === 'weddings') wireTips();
 
-  loadImages(type).catch(showError);
+  loadImages(activeType).catch(showError);
 }
+
+/** Back / forward buttons after a pushState switch. */
+window.addEventListener('popstate', () => {
+  const next = resolveType();
+  const nextDescriptor = GALLERY_TYPES[next];
+
+  // Left the babies section entirely — cheapest to just reload.
+  if (!nextDescriptor || nextDescriptor.section !== 'babies') {
+    location.reload();
+    return;
+  }
+  if (next !== activeType) showSubtype(next);
+});
 
 /** Hero image + heading. */
 function renderChrome({ photo, title, titleKey, heroClass }) {
@@ -96,7 +117,10 @@ function renderChrome({ photo, title, titleKey, heroClass }) {
   document.title = title;
 }
 
-/** Sub-nav for Krsty / Novorodenci, incl. the active-link marker. */
+/**
+ * Sub-nav for Krsty / Novorodenci. Wired once: clicks are intercepted and
+ * switch the grid in place instead of reloading the page.
+ */
 function renderBabiesNav(currentType) {
   els.description.hidden = false;
   els.description.classList.add('is-babies');
@@ -104,16 +128,39 @@ function renderBabiesNav(currentType) {
 
   els.babies.querySelectorAll('a[data-gallery-type]').forEach((link) => {
     const target = link.dataset.galleryType;
-    console.log(target, currentType);
     const url = new URL('gallery.html?type=babies', location.href);
     url.searchParams.set('subtype', target);
     link.href = url.pathname + url.search;
 
-    const isActive = target === currentType;
+    link.addEventListener('click', (event) => {
+      // Let ctrl/cmd/shift/middle-click open a real new tab.
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      if (target === activeType) return;
+
+      history.pushState({ subtype: target }, '', link.href);
+      showSubtype(target);
+    });
+  });
+
+  markActiveBabiesLink(currentType);
+}
+
+function markActiveBabiesLink(active) {
+  els.babies.querySelectorAll('a[data-gallery-type]').forEach((link) => {
+    const isActive = link.dataset.galleryType === active;
     link.classList.toggle('activeLinkSection', isActive);
     if (isActive) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
   });
+}
+
+/** Swap the grid to another babies subtype without leaving the page. */
+function showSubtype(next) {
+  activeType = next;
+  markActiveBabiesLink(next);
+  els.grid.replaceChildren();
+  loadImages(next).catch(showError);
 }
 
 /** The wedding tips carousel — replaces currentTipIndex / isAtStart / isAtEnd. */
@@ -169,13 +216,18 @@ function wireTips() {
   sync();
 }
 
+/** Monotonic token so a slow, superseded fetch can't paint over a newer one. */
+
 async function loadImages(galleryType) {
+  const token = ++requestToken;
   els.error.hidden = true;
 
   const res = await fetch(`${API}/cloud_storage/${galleryType}`);
+  if (token !== requestToken) return;
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
   const images = await res.json();
+  if (token !== requestToken) return;
   if (!Array.isArray(images) || !images.length) return;
 
   els.grid.replaceChildren(...buildColumns(images));
@@ -219,7 +271,7 @@ function imageCard(image) {
 
   if (image.mobileUrl && image.mobileWidth && image.width) {
     img.srcset = `${image.mobileUrl} ${image.mobileWidth}w, ${image.fullUrl} ${image.width}w`;
-    img.sizes = '(max-width: 599px) 100vw, 33vw';
+    img.sizes = '(max-width: 599px) 33vw';
   }
 
   card.append(img);
