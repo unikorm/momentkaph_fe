@@ -2,7 +2,6 @@ const COLUMN_COUNT = 3;
 
 const API = location.hostname === 'localhost' ? 'http://localhost:3069' : 'https://api.momentkaph.sk';;
 
-// `title` is the Slovak fallback until lang.js exists; `titleKey` is for later.
 const GALLERY_TYPES = {
   weddings: {
     photo: 'gallery_weddings.avif',
@@ -103,13 +102,11 @@ function renderBabiesNav(currentType) {
   els.description.classList.add('is-babies');
   els.babies.hidden = false;
 
-  const lang = new URLSearchParams(location.search).get('lang');
-
   els.babies.querySelectorAll('a[data-gallery-type]').forEach((link) => {
     const target = link.dataset.galleryType;
-    const url = new URL('gallery.html', location.href);
-    url.searchParams.set('type', target);
-    if (lang) url.searchParams.set('lang', lang);
+    console.log(target, currentType);
+    const url = new URL('gallery.html?type=babies', location.href);
+    url.searchParams.set('subtype', target);
     link.href = url.pathname + url.search;
 
     const isActive = target === currentType;
