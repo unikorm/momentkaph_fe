@@ -1,0 +1,30 @@
+# momentkaph.sk on Netlify / Cloudflare Pages — DRAFT, mirrors src/js/routes.js.
+# Put this file in the published directory (next to index.html).
+#
+# Both hosts already do two things on their own: serve /about-me from
+# about-me.html ("pretty URLs", redirecting the .html form) and serve 404.html
+# with a 404 status for unknown paths. This file adds the rest. First match wins.
+#
+# Limitation vs. nginx: /gallery/<anything> is served here and js/gallery.js
+# sends unknown types to /404 client-side; nginx enumerates the types instead.
+
+/sk                    /                            301
+/sk/*                  /:splat                      301
+
+/gallery               /                            301
+/gallery/babies        /gallery/babies/baptism      301
+/gallery/*             /gallery.html                200
+
+/en                    /index.html                  200
+/en/about-me           /about-me.html               200
+/en/contact-me         /contact-me.html             200
+/en/gallery            /en                          301
+/en/gallery/babies     /en/gallery/babies/baptism   301
+/en/gallery/*          /gallery.html                200
+
+/uk                    /index.html                  200
+/uk/about-me           /about-me.html               200
+/uk/contact-me         /contact-me.html             200
+/uk/gallery            /uk                          301
+/uk/gallery/babies     /uk/gallery/babies/baptism   301
+/uk/gallery/*          /gallery.html                200

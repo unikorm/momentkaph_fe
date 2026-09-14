@@ -1,4 +1,5 @@
 import { wireCarousel } from './carousel.js';
+import { galleryTypeFrom, galleryUrl, splitLang, withLang } from './routes.js';
 
 const COLUMN_COUNT = 3;
 
@@ -74,19 +75,17 @@ const els = {
   error: document.querySelector('#error-message'),
 };
 
-/** ?type=babies&subtype=X → X, otherwise ?type=X → X. */
-function resolveType(search = location.search) {
-  const params = new URLSearchParams(search);
-  return params.get('type') === 'babies' ? params.get('subtype') : params.get('type');
-}
+/** Language prefix of this page (/en/gallery/… → 'en'), kept on every link we build. */
+const { lang } = splitLang(location.pathname);
 
-/** The gallery type currently shown in the grid. */
-let activeType = resolveType();
+/** The gallery type currently shown in the grid: /gallery/weddings → 'weddings', /gallery/babies/newborn → 'newborn'. */
+let activeType = galleryTypeFrom(location.pathname);
 let requestToken = 0;
 const descriptor = GALLERY_TYPES[activeType];
 
 if (!descriptor) {
-  location.replace('404.html');
+  // Server-side routing already 404s unknown types; this is the fallback for hosts that can't.
+  location.replace(withLang('/404', lang));
 } else {
   renderChrome(descriptor);
   if (descriptor.section === 'babies') renderBabiesNav(activeType);
@@ -97,7 +96,7 @@ if (!descriptor) {
 
 /** Back / forward buttons after a pushState switch. */
 window.addEventListener('popstate', () => {
-  const next = resolveType();
+  const next = galleryTypeFrom(location.pathname);
   const nextDescriptor = GALLERY_TYPES[next];
 
   // Left the babies section entirely — cheapest to just reload.
@@ -110,7 +109,7 @@ window.addEventListener('popstate', () => {
 
 /** Hero image + heading. */
 function renderChrome({ photo, title, titleKey, heroClass }) {
-  els.hero.src = `assets/${photo}`;
+  els.hero.src = `/assets/${photo}`;
   els.hero.alt = '';
   if (heroClass) els.hero.classList.add(heroClass);
 
@@ -130,9 +129,7 @@ function renderBabiesNav(currentType) {
 
   els.babies.querySelectorAll('a[data-gallery-type]').forEach((link) => {
     const target = link.dataset.galleryType;
-    const url = new URL('gallery.html?type=babies', location.href);
-    url.searchParams.set('subtype', target);
-    link.href = url.pathname + url.search;
+    link.href = galleryUrl(target, lang);
 
     link.addEventListener('click', (event) => {
       // Let ctrl/cmd/shift/middle-click open a real new tab.

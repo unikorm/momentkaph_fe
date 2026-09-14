@@ -1,0 +1,9 @@
+{
+  "name": "momentkaph-fe",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node dev.js",
+    "check": "find src/js dev.js -name '*.js' -exec node --check {} +"
+  }
+}
