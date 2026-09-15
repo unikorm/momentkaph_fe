@@ -1,5 +1,5 @@
 import { wireCarousel } from './carousel.js';
-import { DEFAULT_LANG, galleryTypeFrom, galleryUrl, splitLang, withLang } from './routes.js';
+import { galleryTypeFrom, galleryUrl } from './routes.js';
 
 const COLUMN_COUNT = 3;
 
@@ -75,17 +75,14 @@ const els = {
   error: document.querySelector('#error-message'),
 };
 
-/** Language prefix of this page (/en/gallery/… → 'en'), kept on every link we build. */
-const lang = splitLang(location.pathname).lang ?? DEFAULT_LANG;
-
-/** The gallery type currently shown in the grid: /sk/gallery/weddings → 'weddings', /sk/gallery/babies/newborn → 'newborn'. */
+/** The gallery type currently shown in the grid: /gallery/weddings → 'weddings', /gallery/babies/newborn → 'newborn'. */
 let activeType = galleryTypeFrom(location.pathname);
 let requestToken = 0;
 const descriptor = GALLERY_TYPES[activeType];
 
 if (!descriptor) {
   // Server-side routing already 404s unknown types; this is the fallback for hosts that can't.
-  location.replace(withLang('/404', lang));
+  location.replace('/404');
 } else {
   renderChrome(descriptor);
   if (descriptor.section === 'babies') renderBabiesNav(activeType);
@@ -129,7 +126,7 @@ function renderBabiesNav(currentType) {
 
   els.babies.querySelectorAll('a[data-gallery-type]').forEach((link) => {
     const target = link.dataset.galleryType;
-    link.href = galleryUrl(target, lang);
+    link.href = galleryUrl(target);
 
     link.addEventListener('click', (event) => {
       // Let ctrl/cmd/shift/middle-click open a real new tab.

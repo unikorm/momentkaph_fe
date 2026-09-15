@@ -54,21 +54,16 @@
     # ============================================================
     # ROUTING — mirrors src/js/routes.js. Add a route there, add it here.
     #
-    #   /                            302 → /sk | /en | /ua   (cookie, then Accept-Language, then sk)
-    #   /about-me                    302 → /<lang>/about-me  (same choice)
-    #   /sk                          index.html
-    #   /sk/about-me                 about-me.html
-    #   /sk/contact-me               contact-me.html
-    #   /sk/gallery                  301 → /sk
-    #   /sk/gallery/babies           301 → /sk/gallery/babies/baptism
-    #   /sk/gallery/weddings         gallery.html   (the page reads the type from the path)
-    #   /sk/gallery/babies/newborn   gallery.html
-    #   /sk/about-me.html, /sk/about-me/   301 → /sk/about-me   (one address per page)
-    #   /sk/assets/x.avif            301 → /assets/x.avif       (old Angular asset addresses)
-    #   anything else, /sk/404 too   404 + 404.html
-    #
-    # /en/… and /ua/… serve exactly the same files; js/lang.js reads the
-    # prefix from location.pathname and swaps the text.
+    #   /                            index.html
+    #   /about-me                    about-me.html      no .html in the address bar
+    #   /contact-me                  contact-me.html
+    #   /gallery                     301 → /
+    #   /gallery/babies              301 → /gallery/babies/baptism
+    #   /gallery/weddings            gallery.html       (the page reads the type from the path)
+    #   /gallery/babies/newborn      gallery.html
+    #   /about-me.html, /about-me/   301 → /about-me    (one address per page)
+    #   /sk/…  /en/…  /ua/…          301 → /…           (old Angular addresses, see below)
+    #   /404, anything else          404 + 404.html
     # ============================================================
 
     # Apache runs this file again after every internal rewrite and for the
@@ -78,46 +73,34 @@
 
     # Static files: nothing below applies to them.
     RewriteRule ^(assets|styles|js|lang|fonts)/ - [L]
-    RewriteRule ^(sk|en|ua)/(assets|fonts)/(.+)$ /$2/$3 [R=301,L]
+
+    # Old addresses from the Angular site (one folder per language) are indexed
+    # and bookmarked: send them to the new address. Except the old home page —
+    # the live site 301-redirected / to /sk/index.html and browsers cache 301s,
+    # so redirecting it back to / would loop for returning visitors. That one
+    # address is served in place instead.
+    RewriteRule ^(sk|en|ua)(/index\.html)?/?$ /index.html [L]
+    RewriteRule ^(sk|en|ua)/(.+)$ /$2 [R=301,L]
 
     # One address per page: no trailing slash, no .html.
     # THE_REQUEST is the browser's request line, untouched by internal rewrites,
     # so these fire only for what was actually typed, not for the rewrites below.
     RewriteRule ^(.+)/$ /$1 [R=301,L]
-    RewriteCond %{THE_REQUEST} \s/(sk|en|ua)/(index|gallery)\.html[?\s]
-    RewriteRule ^ /%1 [R=301,L]
-    RewriteCond %{THE_REQUEST} \s/(sk|en|ua)/(about-me|contact-me)\.html[?\s]
-    RewriteRule ^ /%1/%2 [R=301,L]
     RewriteCond %{THE_REQUEST} \s/(index|gallery)\.html[?\s]
     RewriteRule ^ / [R=301,L]
     RewriteCond %{THE_REQUEST} \s/(about-me|contact-me|404)\.html[?\s]
     RewriteRule ^ /%1 [R=301,L]
 
-    # No language in the address → choose one. Order of precedence:
-    # the cookie the language switcher sets, else the browser's Accept-Language,
-    # else Slovak. 302, because the answer depends on the visitor.
-    RewriteRule ^ - [E=LANG:sk]
-    RewriteCond %{HTTP:Accept-Language} ^en [NC]
-    RewriteRule ^ - [E=LANG:en]
-    RewriteCond %{HTTP:Accept-Language} ^(uk|ru) [NC]
-    RewriteRule ^ - [E=LANG:ua]
-    RewriteCond %{HTTP_COOKIE} (^|;\s*)lang=(sk|en|ua)(;|$)
-    RewriteRule ^ - [E=LANG:%2]
+    # Pages
+    RewriteRule ^$               /index.html      [L]
+    RewriteRule ^about-me$       /about-me.html   [L]
+    RewriteRule ^contact-me$     /contact-me.html [L]
+    RewriteRule ^gallery$        / [R=301,L]
+    RewriteRule ^gallery/babies$ /gallery/babies/baptism [R=301,L]
+    RewriteRule ^gallery/(weddings|love-story|pregnancy|studio|family|portrait)$ /gallery.html [L]
+    RewriteRule ^gallery/babies/(baptism|newborn)$ /gallery.html [L]
 
-    RewriteRule ^$ /%{ENV:LANG} [R=302,L]
-    RewriteCond %{REQUEST_URI} !^/(sk|en|ua)(/|$)
-    RewriteRule ^(.+)$ /%{ENV:LANG}/$1 [R=302,L]
-
-    # Pages. The prefix stays in the address bar; the file is the same for every language.
-    RewriteRule ^(sk|en|ua)$                 /index.html      [L]
-    RewriteRule ^(sk|en|ua)/about-me$        /about-me.html   [L]
-    RewriteRule ^(sk|en|ua)/contact-me$      /contact-me.html [L]
-    RewriteRule ^(sk|en|ua)/gallery$         /$1 [R=301,L]
-    RewriteRule ^(sk|en|ua)/gallery/babies$  /$1/gallery/babies/baptism [R=301,L]
-    RewriteRule ^(sk|en|ua)/gallery/(weddings|love-story|pregnancy|studio|family|portrait)$ /gallery.html [L]
-    RewriteRule ^(sk|en|ua)/gallery/babies/(baptism|newborn)$ /gallery.html [L]
-
-    # Everything else: a real 404 status; the page comes from ErrorDocument.
+    # Everything else, /404 included: a real 404 status; the page comes from ErrorDocument.
     RewriteRule ^ - [R=404,L]
 
     #notes:
@@ -125,7 +108,6 @@
     # L flag: Last rule - stop processing further rules if this one matches
     # R=301 flag: Permanent redirect
     # NC flag: Case-insensitive match
-    # E=NAME:value flag: set an environment variable for later rules
 </IfModule>
 
 ErrorDocument 404 /404.html
