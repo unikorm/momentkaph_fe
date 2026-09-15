@@ -228,7 +228,7 @@ function imageCard(image) {
 
   if (image.mobileUrl && image.mobileWidth && image.width) {
     img.srcset = `${image.mobileUrl} ${image.mobileWidth}w, ${image.fullUrl} ${image.width}w`;
-    img.sizes = '(max-width: 599px) 33vw';
+    img.sizes = '33vw';
   }
 
   card.append(img);

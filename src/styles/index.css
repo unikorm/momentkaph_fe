@@ -249,7 +249,7 @@ a.image_container {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 1rem 3rem;
+  padding: 1rem 3rem 7rem;
 
   font: var(--FONT-PRIMARY);
   font-size: 2.5rem;
@@ -282,8 +282,8 @@ a.image_container {
   rotate: 180deg;
 }
 
-.reviews .arrow-smaller-left,
-.reviews .arrow-smaller-right {
+.arrow-smaller-left,
+.arrow-smaller-right {
   height: 2rem;
   opacity: .3;
   position: absolute;
@@ -305,50 +305,6 @@ a.image_container {
   top: calc(50% - 1rem);
   right: -1.665rem;
   rotate: 180deg;
-}
-
-.reviews-list {
-  display: flex;
-  gap: 2rem;
-  width: 100%;
-  max-width: 38rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  opacity: .85;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .review {
-    font: var(--FONT-PRIMARY);
-    font-size: 1.5rem;
-    letter-spacing: 1px;
-    line-height: 1.2;
-    text-align: center;
-    align-self: center;
-    scroll-snap-align: center;
-
-    max-width: 38rem;
-    width: 100%;
-    padding: 0 2rem;
-    flex-shrink: 0;
-
-    .review-header,
-    .review-bottom {
-      font-weight: 700;
-    }
-
-    p {
-      margin: 0;
-    }
-
-    .review-author {
-      font-weight: 800;
-    }
-  }
 }
 
 @media (max-width: 1000px) {
