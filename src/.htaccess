@@ -1,0 +1,185 @@
+# managed hosting settings
+# only .htaccess file config is able to modify so i use it for all settings within allowed modules
+#
+# LAYOUT in /web/ is flat: index.html, about-me.html, contact-me.html, gallery.html, 404.html,
+# assets/, styles/, js/, lang/, fonts/ and this file — i.e. the contents of src/.
+# The old sk/, en/, ua/ folders from the Angular builds must be deleted: a real
+# directory wins over the rewrite rules below and would shadow the new pages.
+
+# rewrite module to handle URL rewriting and redirection
+<IfModule mod_rewrite.c>
+    # Enable rewrite engine
+    RewriteEngine On
+    # Set the base path for all subsequent rewrite rules, relative to the document root -> in my case already in /web/
+    RewriteBase /
+
+    # block common exploit attempts -> heavy-lifting filter is i believe managed by root configuration
+    # no essential to filter wide spectrum of different threats
+    # WordPress, PHP, CMS-specific paths,
+    RewriteRule ^wp- - [F,L]
+    RewriteRule ^wordpress - [F,L]
+    RewriteRule \.php$ - [F,L]
+    RewriteRule ^admin - [F,L]
+    RewriteRule ^login - [F,L]
+    RewriteRule ^xmlrpc\.php - [F,L]
+    # hidden files and sensitive extensions
+    RewriteRule (^|/)\. - [F,L]
+    RewriteRule \.(env|git|svn|htaccess|htpasswd|log|sql|bak)$ - [F,L]
+
+    # block SQL injection, script injection, traversal attempts, block remote file inclusion
+    RewriteCond %{QUERY_STRING} (union.*select|insert.*into|delete.*from|drop.*table) [NC,OR]
+    RewriteCond %{QUERY_STRING} (<script|javascript:|onerror=|onload=) [NC,OR]
+    RewriteCond %{QUERY_STRING} (\.\./|\.\.\\|/etc/passwd) [NC,OR]
+    RewriteCond %{QUERY_STRING} (http://|https://|ftp://) [NC]
+    RewriteRule .* - [F,L]
+
+    # block requests without a User-Agent header
+    # legitimate browsers always send this, but many automated scanners don't + block known bad bot patterns
+    RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
+    RewriteCond %{HTTP_USER_AGENT} (semrush|ahrefs|mj12bot|majestic) [NC]
+    RewriteRule .* - [F,L]
+
+    # Handle social media and tracking parameters
+    RewriteCond %{QUERY_STRING} ^(.*&)?fbclid=[^&]+(&.*)?$ [OR]
+    RewriteCond %{QUERY_STRING} ^(.*&)?utm_[^&]+(&.*)?$ [OR]
+    RewriteCond %{QUERY_STRING} ^(.*&)?fb_[^&]+(&.*)?$ [OR]
+    RewriteCond %{QUERY_STRING} ^(.*&)?source=[^&]+(&.*)?$ [OR]
+    RewriteCond %{QUERY_STRING} ^(.*&)?ref=[^&]+(&.*)?$
+    RewriteRule ^(.*)$ /$1? [R=301,L]
+
+    # Redirect 'www' to non-'www'
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    RewriteRule ^(.*)$ https://%1/$1 [L,R=301]
+
+    # ============================================================
+    # ROUTING — mirrors src/js/routes.js. Add a route there, add it here.
+    #
+    #   /                            index.html
+    #   /about-me                    about-me.html      no .html in the address bar
+    #   /contact-me                  contact-me.html
+    #   /gallery                     301 → /
+    #   /gallery/babies              301 → /gallery/babies/baptism
+    #   /gallery/weddings            gallery.html       (the page reads the type from the path)
+    #   /gallery/babies/newborn      gallery.html
+    #   /about-me.html, /about-me/   301 → /about-me    (one address per page)
+    #   /sk/…  /en/…  /ua/…          301 → /…           (old Angular addresses, see below)
+    #   /404, anything else          404 + 404.html
+    # ============================================================
+
+    # Apache runs this file again after every internal rewrite and for the
+    # ErrorDocument (REDIRECT_STATUS is set then). The target is final: stop.
+    RewriteCond %{ENV:REDIRECT_STATUS} !^$
+    RewriteRule ^ - [L]
+
+    # Static files: nothing below applies to them.
+    RewriteRule ^(assets|styles|js|lang|fonts)/ - [L]
+
+    # Old addresses from the Angular site (one folder per language) are indexed
+    # and bookmarked: send them to the new address. Except the old home page —
+    # the live site 301-redirected / to /sk/index.html and browsers cache 301s,
+    # so redirecting it back to / would loop for returning visitors. That one
+    # address is served in place instead.
+    RewriteRule ^(sk|en|ua)(/index\.html)?/?$ /index.html [L]
+    RewriteRule ^(sk|en|ua)/(.+)$ /$2 [R=301,L]
+
+    # One address per page: no trailing slash, no .html.
+    # THE_REQUEST is the browser's request line, untouched by internal rewrites,
+    # so these fire only for what was actually typed, not for the rewrites below.
+    RewriteRule ^(.+)/$ /$1 [R=301,L]
+    RewriteCond %{THE_REQUEST} \s/(index|gallery)\.html[?\s]
+    RewriteRule ^ / [R=301,L]
+    RewriteCond %{THE_REQUEST} \s/(about-me|contact-me|404)\.html[?\s]
+    RewriteRule ^ /%1 [R=301,L]
+
+    # Pages
+    RewriteRule ^$               /index.html      [L]
+    RewriteRule ^about-me$       /about-me.html   [L]
+    RewriteRule ^contact-me$     /contact-me.html [L]
+    RewriteRule ^gallery$        / [R=301,L]
+    RewriteRule ^gallery/babies$ /gallery/babies/baptism [R=301,L]
+    RewriteRule ^gallery/(weddings|love-story|pregnancy|studio|family|portrait)$ /gallery.html [L]
+    RewriteRule ^gallery/babies/(baptism|newborn)$ /gallery.html [L]
+
+    # Everything else, /404 included: a real 404 status; the page comes from ErrorDocument.
+    RewriteRule ^ - [R=404,L]
+
+    #notes:
+    # F flag: returns 403 Forbidden
+    # L flag: Last rule - stop processing further rules if this one matches
+    # R=301 flag: Permanent redirect
+    # NC flag: Case-insensitive match
+</IfModule>
+
+ErrorDocument 404 /404.html
+
+# Module used to assign correct content metadata (Content-Type) to the corresponding content
+# selected for HTTP response by mapping file extensions/patterns in the URI to MIME types.
+# this metadata is also used in content negotiation
+# also this module runs earlier in the processing chain to properly set Content-Type before other modules would act on it
+# (mod_mime.c is the source file)
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+    AddType text/css .css
+    AddType text/html .html
+    AddType application/json .json
+    AddType application/manifest+json .webmanifest
+    AddType image/avif .avif
+    AddType image/x-icon .ico
+    AddType image/png .png
+    AddType image/svg+xml .svg
+    AddType font/woff2 .woff2
+</IfModule>
+
+# headers module to set custom headers in HTTP response
+<IfModule mod_headers.c>
+    # Content Security Policy (CSP)
+    # img-src: gallery photos come from wherever the API points (DigitalOcean now, Scaleway later) — add that host here when it moves
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' momentkaph.fra1.cdn.digitaloceanspaces.com; font-src 'self'; connect-src 'self' api.momentkaph.sk; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self';"
+
+    # before CSP frame-ancestors directive
+    Header set X-Frame-Options "DENY"
+
+    # X-Content-Type-Options - prevents MIME type sniffing
+    # Browsers will trust your Content-Type headers and won't try to guess
+    # This prevents attacks where malicious content is disguised as safe files
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Referrer-Policy - controls how much information is sent in Referer header
+    # 'strict-origin-when-cross-origin' (default) sends full URL for same-origin requests
+    # but only the origin for cross-origin requests, protecting user privacy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # HSTS - force HTTPS for 1 year, including subdomains
+    # only add "preload" once you're sure and intend to submit to hstspreload.org
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    # Permissions-Policy - (experimental, low support) controls which browser features your site can use
+    # This limits the attack surface by disabling features you don't need
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+
+    # CORS based on the requesting origin
+    Header set Access-Control-Allow-Origin "https://momentkaph.sk"
+
+    # html, dictionaries, js, css: NOT content-hashed any more (no build step),
+    # so the browser must always revalidate. Apache answers with a cheap 304
+    # (ETag / Last-Modified) when nothing changed, so this costs one round trip, not a download.
+    # Was "1 year, immutable" for js/css in the Angular days — that would freeze old code after a deploy.
+    <FilesMatch "\.(html|webmanifest|json|js|css)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+
+    # images, icons, fonts - long cache => 31536000 seconds ~ 1 year
+    # these rarely change; when one does, give it a new file name
+    <FilesMatch "\.(avif|png|svg|ico|woff2)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
+# compress content on-the-fly (transport layer) before sending to client (Content-Encoding: )
+# avif/png/woff2 are already compressed formats, no need for further compression
+# using BROTLI algorithm (Huffman encoding, LZSS and second-order context modeling)=> br
+# alternatively, could use mod_deflate (gzip), but brotli has wide support, so...
+<IfModule mod_brotli.c>
+    # AddOutputFilterByType assigns a filter to specific MIME types: only html, css, js, json
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/css application/javascript application/json
+</IfModule>
