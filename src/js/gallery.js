@@ -1,5 +1,5 @@
 import { wireCarousel } from './carousel.js';
-import { galleryTypeFrom, galleryUrl, splitLang, withLang } from './routes.js';
+import { DEFAULT_LANG, galleryTypeFrom, galleryUrl, splitLang, withLang } from './routes.js';
 
 const COLUMN_COUNT = 3;
 
@@ -76,9 +76,9 @@ const els = {
 };
 
 /** Language prefix of this page (/en/gallery/… → 'en'), kept on every link we build. */
-const { lang } = splitLang(location.pathname);
+const lang = splitLang(location.pathname).lang ?? DEFAULT_LANG;
 
-/** The gallery type currently shown in the grid: /gallery/weddings → 'weddings', /gallery/babies/newborn → 'newborn'. */
+/** The gallery type currently shown in the grid: /sk/gallery/weddings → 'weddings', /sk/gallery/babies/newborn → 'newborn'. */
 let activeType = galleryTypeFrom(location.pathname);
 let requestToken = 0;
 const descriptor = GALLERY_TYPES[activeType];

@@ -2,25 +2,27 @@
 /**
  * Dev server, zero dependencies:   npm start   →   http://localhost:4200
  *
- * Serves src/ the way production does (deploy/nginx-frontend.conf), driven by
- * the same route table (src/js/routes.js):
+ * Serves src/ the way production Apache does (src/.htaccess), driven by the
+ * same route table (src/js/routes.js):
  *
- *   /about-me                              → src/about-me.html
- *   /gallery/weddings                      → src/gallery.html  (page reads the type from the path)
- *   /gallery                               → redirect /
- *   /about-me.html  /about-me/  /sk/about-me
- *                                          → redirect /about-me  (one address per page)
- *   /en/…  /uk/…                           → same files, prefix kept
- *   anything else                          → 404 status + src/404.html
+ *   /                          → redirect /sk | /en | /ua  (cookie, Accept-Language, else sk)
+ *   /about-me                  → redirect /<lang>/about-me  (same choice)
+ *   /sk/about-me               → src/about-me.html
+ *   /en/gallery/weddings       → src/gallery.html  (page reads the type from the path)
+ *   /sk/gallery                → redirect /sk
+ *   /sk/about-me.html  /sk/about-me/
+ *                              → redirect /sk/about-me  (one address per page)
+ *   /sk/assets/x.avif          → redirect /assets/x.avif  (old Angular asset addresses)
+ *   anything else              → 404 status + src/404.html
  *
  * Redirects are 302 here: browsers cache 301s, which hurts while iterating.
- * Production uses 301.
+ * Production uses 301 where the address is permanent.
  */
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ROUTES, match, splitLang, withLang } from './src/js/routes.js';
+import { DEFAULT_LANG, ROUTES, match, splitLang, withLang } from './src/js/routes.js';
 
 const ROOT = fileURLToPath(new URL('./src/', import.meta.url));
 const PORT = Number(process.argv[2] ?? process.env.PORT ?? 4200);
@@ -41,7 +43,7 @@ const MIME = {
 createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host ?? 'localhost'}`);
   try {
-    await handle(url, res);
+    await handle(req, url, res);
   } catch (err) {
     console.error(err);
     res.writeHead(500).end('internal error');
@@ -49,16 +51,23 @@ createServer(async (req, res) => {
   console.log(res.statusCode, req.method, url.pathname + url.search);
 }).listen(PORT, () => console.log(`momentkaph_fe → http://localhost:${PORT}`));
 
-async function handle({ pathname, search }, res) {
+async function handle(req, { pathname, search }, res) {
   // Anything with an extension is a static file and is served as-is…
   if (extname(pathname)) {
-    // …except .html: a page's address is its clean URL.
+    // …except .html: a page's address is its clean URL…
     if (pathname.endsWith('.html')) return redirect(res, cleanUrlFor(pathname) + search);
+    // …and old Angular asset addresses, which carried the language prefix.
+    const legacy = /^\/(?:sk|en|ua)(\/(?:assets|fonts)\/.+)$/.exec(pathname);
+    if (legacy) return redirect(res, legacy[1] + search);
     return sendFile(res, pathname);
   }
 
-  // One address per page: no trailing slash, no /sk/ prefix.
   const { lang, path } = splitLang(pathname);
+
+  // No language in the address → choose one, the same way .htaccess does.
+  if (!lang) return redirect(res, withLang(path, pickLang(req)) + search);
+
+  // One address per page: no trailing slash.
   const canonical = withLang(path, lang);
   if (pathname !== canonical) return redirect(res, canonical + search);
 
@@ -68,11 +77,23 @@ async function handle({ pathname, search }, res) {
   return sendFile(res, '/' + hit.route.file, hit.route.status ?? 200);
 }
 
-/** '/about-me.html' → '/about-me';  '/index.html' → '/';  '/en/gallery.html' → '/en'. */
+/** The switcher's cookie, else Accept-Language, else Slovak — same order as .htaccess. */
+function pickLang({ headers }) {
+  const cookie = /(?:^|;\s*)lang=(sk|en|ua)(?:;|$)/.exec(headers.cookie ?? '')?.[1];
+  if (cookie) return cookie;
+
+  const accept = (headers['accept-language'] ?? '').toLowerCase();
+  if (/^(uk|ru)/.test(accept)) return 'ua';
+  if (/^en/.test(accept)) return 'en';
+  return DEFAULT_LANG;
+}
+
+/** '/sk/about-me.html' → '/sk/about-me';  '/en/index.html' → '/en';  '/about-me.html' → '/about-me' (then the language redirect). */
 function cleanUrlFor(pathname) {
   const { lang, path } = splitLang(pathname);
   const route = ROUTES.find((r) => r.file === path.slice(1) && !r.path.includes(':'));
-  return withLang(route?.path ?? '/', lang);
+  const clean = route?.path ?? '/';
+  return lang ? withLang(clean, lang) : clean;
 }
 
 async function sendFile(res, pathname, status = 200) {
