@@ -1,16 +1,22 @@
 # managed hosting settings
 # only .htaccess file config is able to modify so i use it for all settings within allowed modules
+#
+# LAYOUT in /web/ is flat now: index.html, about-me.html, contact-me.html, gallery.html,
+# 404.html, assets/, styles/, js/, lang/, fonts/ and this file — i.e. the contents of src/.
+# No SPA fallback any more: every page is a real file, so Apache serves it directly and
+# unknown paths get a real 404. The old sk/, en/, ua/ Angular folders are only a rollback
+# net — the rules below intercept those addresses before the folders are ever reached.
 
-# rewrite module to handle URL rewriting and redirection to support SPA routing
+# rewrite module to handle URL rewriting and redirection
 <IfModule mod_rewrite.c>
     # Enable rewrite engine
     RewriteEngine On
     # Set the base path for all subsequent rewrite rules, relative to the document root -> in my case already in /web/
-    RewriteBase / 
+    RewriteBase /
 
     # block common exploit attempts -> heavy-lifting filter is i believe managed by root configuration
     # no essential to filter wide spectrum of different threats
-    # WordPress, PHP, CMS-specific paths, 
+    # WordPress, PHP, CMS-specific paths,
     RewriteRule ^wp- - [F,L]
     RewriteRule ^wordpress - [F,L]
     RewriteRule \.php$ - [F,L]
@@ -33,50 +39,53 @@
     RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
     RewriteCond %{HTTP_USER_AGENT} (semrush|ahrefs|mj12bot|majestic) [NC]
     RewriteRule .* - [F,L]
-    
+
+    # Apache runs this file again after an internal rewrite and for the ErrorDocument
+    # (REDIRECT_STATUS is set then). The target is already final: stop.
+    RewriteCond %{ENV:REDIRECT_STATUS} !^$
+    RewriteRule ^ - [L]
+
     # Handle social media and tracking parameters
-    RewriteCond %{QUERY_STRING} ^(.*&)?fbclid=[^&]+(&.*)?$ [OR]
-    RewriteCond %{QUERY_STRING} ^(.*&)?utm_[^&]+(&.*)?$ [OR]
-    RewriteCond %{QUERY_STRING} ^(.*&)?fb_[^&]+(&.*)?$ [OR]
-    RewriteCond %{QUERY_STRING} ^(.*&)?source=[^&]+(&.*)?$ [OR]
-    RewriteCond %{QUERY_STRING} ^(.*&)?ref=[^&]+(&.*)?$
-    RewriteRule ^(.*)$ /$1? [R=301,L]
+    # CHANGED: the gallery now carries its own query (?type=weddings&subtype=baptism), and the
+    # old rule wiped the WHOLE query string — a link shared on Facebook comes back with fbclid
+    # appended and would have lost its type. So strip only on the pages that have no params.
+    RewriteCond %{QUERY_STRING} (^|&)(fbclid|fb_[^=]*|utm_[^=]*|source|ref)= [NC]
+    RewriteRule ^(|index\.html|about-me\.html|contact-me\.html)$ /$1? [R=301,L]
 
     # Redirect 'www' to non-'www'
     RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
     RewriteRule ^(.*)$ https://%1/$1 [L,R=301]
 
-    # Language detection and redirect for root URL only
-    # This checks if someone visits exactly momentkaph.sk (no language prefix)
-    RewriteCond %{HTTP:Accept-Language} ^(uk|ru) [NC]
-    RewriteRule ^$ /ua/index.html [R=302,L]
-    
-    RewriteCond %{HTTP:Accept-Language} ^en [NC]
-    RewriteRule ^$ /en/index.html [R=302,L]
+    # ============================================================
+    # OLD ANGULAR ADDRESSES -> new flat ones
+    # Google has indexed /sk/gallery/weddings, /en/about-me, /ua/contact-me ... and people
+    # have them bookmarked, so they 301 to the new address.
+    #
+    # One exception: the old home page. The previous .htaccess 301-redirected / to
+    # /sk/index.html and browsers CACHE 301s, so a returning visitor still goes straight to
+    # /sk/index.html. Redirecting that back to / would ping-pong forever. That one address
+    # is served in place instead — same page, old address, no loop.
+    # ============================================================
 
-    # Redirect root URL momentkaph.sk/ to momentkaph.sk/sk/index.html
-    # if REQUEST_URI would be / -> evaluates to empty after normalize in per-directory context, redirect to sk version
-    # fallback for other languages or no Accept-Language header
-    RewriteRule ^$ /sk/index.html [R=301,L]
+    # old home page: serve the new index.html where the old one stood
+    RewriteRule ^(sk|en|ua)(/index\.html)?/?$ /index.html [L]
 
-    # Serve assets directly from /assets/ for all languages
-    # check if the requested file or directory does not exist before rewriting 
-    # -> this will evaluate to true for non-existing files, cause i have them in /assets/ only
-    # example: https://momentkaph.sk/en/assets/image.avif -> serves /assets/image.avif
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # old asset/font addresses (og:image on Facebook still points at /sk/assets/...)
     RewriteRule ^(sk|en|ua)/assets/(.+)$ /assets/$2 [L]
-
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(sk|en|ua)/fonts/(.+)$ /fonts/$2 [L]
 
-    # Handle Angular routing for each language
-    # If the requested file or directory does not exist, rewrite to the corresponding language's index.html
-    # example: https://momentkaph.sk/en/gallery/love-story -> serves /en/index.html -> angular app handles routing client-side
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(sk|en|ua)(/.*)?$ /$1/index.html [L]
+    # old routes -> the matching page + query
+    RewriteRule ^(sk|en|ua)/about-me/?$   /about-me.html   [R=301,L]
+    RewriteRule ^(sk|en|ua)/contact-me/?$ /contact-me.html [R=301,L]
+    RewriteRule ^(sk|en|ua)/gallery/babies/(baptism|newborn)/?$ /gallery.html?type=babies&subtype=$2 [R=301,L]
+    RewriteRule ^(sk|en|ua)/gallery/babies/?$ /gallery.html?type=babies&subtype=baptism [R=301,L]
+    RewriteRule ^(sk|en|ua)/gallery/(weddings|love-story|pregnancy|studio|family|portrait)/?$ /gallery.html?type=$2 [R=301,L]
+    RewriteRule ^(sk|en|ua)/gallery/?$ / [R=301,L]
+    # anything else that used to live under a language prefix
+    RewriteRule ^(sk|en|ua)/.*$ / [R=301,L]
+
+    # No SPA fallback: files are served as they are, missing paths fall through to
+    # ErrorDocument below with a real 404 status.
 
     #notes:
     # F flag: returns 403 Forbidden
@@ -85,7 +94,9 @@
     # NC flag: Case-insensitive match
 </IfModule>
 
-# Module used to assign correct content metadata (Content-Type) to the corresponding content 
+ErrorDocument 404 /404.html
+
+# Module used to assign correct content metadata (Content-Type) to the corresponding content
 # selected for HTTP response by mapping file extensions/patterns in the URI to MIME types.
 # this metadata is also used in content negotiation
 # also this module runs earlier in the processing chain to properly set Content-Type before other modules would act on it
@@ -93,17 +104,21 @@
     AddType application/javascript .js
     AddType text/css .css
     AddType text/html .html
+    AddType application/json .json
+    AddType application/manifest+json .webmanifest
     AddType image/avif .avif
     AddType image/x-icon .ico
     AddType image/png .png
     AddType image/svg+xml .svg
+    AddType font/woff2 .woff2
 </IfModule>
 
 # headers module to set custom headers in HTTP response
 <IfModule mod_headers.c>
     # Content Security Policy (CSP)
+    # img-src: gallery photos come from wherever the API points (DigitalOcean now, Scaleway later)
     Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' momentkaph.fra1.cdn.digitaloceanspaces.com; font-src 'self'; connect-src 'self' api.momentkaph.sk; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self';"
-    
+
     # before CSP frame-ancestors directive
     Header set X-Frame-Options "DENY"
 
@@ -128,27 +143,17 @@
     # CORS based on the requesting origin
     Header set Access-Control-Allow-Origin "https://momentkaph.sk"
 
-    # no cache for html/webmanifest - must always check for updated version
-    # these files are not content-hashed, so we need to ensure the client always gets the latest version
-    # using no-cache instead of no-store to allow caching but require revalidation
-    # index.html is only source of truth for app versioning and asset references
-    <FilesMatch "\.(html|webmanifest)$">
+    # CHANGED: js/css are NOT content-hashed any more (no build step, files are js/index.js,
+    # styles/global.css ...). The Angular rule cached them "1 year, immutable" — with these
+    # names that would freeze the old code in every returning browser after a deploy.
+    # no-cache = always revalidate; Apache answers a cheap 304 when nothing changed.
+    <FilesMatch "\.(html|webmanifest|json|js|css)$">
         Header set Cache-Control "no-cache, must-revalidate"
     </FilesMatch>
 
-    # cache js/css - long cache => 31536000 seconds ~ 1 year
-    # these files are content-hashed, so they can be cached for a long time
-    <FilesMatch "\.(js|css)$">
-        Header set Cache-Control "public, max-age=31536000, immutable"
-    </FilesMatch>
-    
-    # cache control for static assets - long cache => 31536000 seconds ~ 1 year
-    <FilesMatch "\.(avif|png|svg)$">
-        Header set Cache-Control "public, max-age=31536000, immutable"
-    </FilesMatch>
-
-    # fonts - long cache => 31536000 seconds ~ 1 year
-    <FilesMatch "\.(woff2)$">
+    # images, icons, fonts - long cache => 31536000 seconds ~ 1 year
+    # these rarely change; when one does, give it a new file name
+    <FilesMatch "\.(avif|png|svg|ico|woff2)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
     </FilesMatch>
 </IfModule>
@@ -159,5 +164,5 @@
 # alternatively, could use mod_deflate (gzip), but brotli has wide support, so...
 <IfModule mod_brotli.c>
     # AddOutputFilterByType assigns a filter to specific MIME types
-    AddOutputFilterByType BROTLI_COMPRESS text/html text/css application/javascript # compress only html, css, js
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/css application/javascript application/json
 </IfModule>
