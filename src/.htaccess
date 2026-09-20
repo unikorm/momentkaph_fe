@@ -1,0 +1,163 @@
+# managed hosting settings
+# only .htaccess file config is able to modify so i use it for all settings within allowed modules
+
+# rewrite module to handle URL rewriting and redirection to support SPA routing
+<IfModule mod_rewrite.c>
+    # Enable rewrite engine
+    RewriteEngine On
+    # Set the base path for all subsequent rewrite rules, relative to the document root -> in my case already in /web/
+    RewriteBase / 
+
+    # block common exploit attempts -> heavy-lifting filter is i believe managed by root configuration
+    # no essential to filter wide spectrum of different threats
+    # WordPress, PHP, CMS-specific paths, 
+    RewriteRule ^wp- - [F,L]
+    RewriteRule ^wordpress - [F,L]
+    RewriteRule \.php$ - [F,L]
+    RewriteRule ^admin - [F,L]
+    RewriteRule ^login - [F,L]
+    RewriteRule ^xmlrpc\.php - [F,L]
+    # hidden files and sensitive extensions
+    RewriteRule (^|/)\. - [F,L]
+    RewriteRule \.(env|git|svn|htaccess|htpasswd|log|sql|bak)$ - [F,L]
+
+    # block SQL injection, script injection, traversal attempts, block remote file inclusion
+    RewriteCond %{QUERY_STRING} (union.*select|insert.*into|delete.*from|drop.*table) [NC,OR]
+    RewriteCond %{QUERY_STRING} (<script|javascript:|onerror=|onload=) [NC,OR]
+    RewriteCond %{QUERY_STRING} (\.\./|\.\.\\|/etc/passwd) [NC,OR]
+    RewriteCond %{QUERY_STRING} (http://|https://|ftp://) [NC]
+    RewriteRule .* - [F,L]
+
+    # block requests without a User-Agent header
+    # legitimate browsers always send this, but many automated scanners don't + block known bad bot patterns
+    RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
+    RewriteCond %{HTTP_USER_AGENT} (semrush|ahrefs|mj12bot|majestic) [NC]
+    RewriteRule .* - [F,L]
+    
+    # Handle social media and tracking parameters
+    RewriteCond %{QUERY_STRING} ^(.*&)?fbclid=[^&]+(&.*)?$ [OR]
+    RewriteCond %{QUERY_STRING} ^(.*&)?utm_[^&]+(&.*)?$ [OR]
+    RewriteCond %{QUERY_STRING} ^(.*&)?fb_[^&]+(&.*)?$ [OR]
+    RewriteCond %{QUERY_STRING} ^(.*&)?source=[^&]+(&.*)?$ [OR]
+    RewriteCond %{QUERY_STRING} ^(.*&)?ref=[^&]+(&.*)?$
+    RewriteRule ^(.*)$ /$1? [R=301,L]
+
+    # Redirect 'www' to non-'www'
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    RewriteRule ^(.*)$ https://%1/$1 [L,R=301]
+
+    # Language detection and redirect for root URL only
+    # This checks if someone visits exactly momentkaph.sk (no language prefix)
+    RewriteCond %{HTTP:Accept-Language} ^(uk|ru) [NC]
+    RewriteRule ^$ /ua/index.html [R=302,L]
+    
+    RewriteCond %{HTTP:Accept-Language} ^en [NC]
+    RewriteRule ^$ /en/index.html [R=302,L]
+
+    # Redirect root URL momentkaph.sk/ to momentkaph.sk/sk/index.html
+    # if REQUEST_URI would be / -> evaluates to empty after normalize in per-directory context, redirect to sk version
+    # fallback for other languages or no Accept-Language header
+    RewriteRule ^$ /sk/index.html [R=301,L]
+
+    # Serve assets directly from /assets/ for all languages
+    # check if the requested file or directory does not exist before rewriting 
+    # -> this will evaluate to true for non-existing files, cause i have them in /assets/ only
+    # example: https://momentkaph.sk/en/assets/image.avif -> serves /assets/image.avif
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(sk|en|ua)/assets/(.+)$ /assets/$2 [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(sk|en|ua)/fonts/(.+)$ /fonts/$2 [L]
+
+    # Handle Angular routing for each language
+    # If the requested file or directory does not exist, rewrite to the corresponding language's index.html
+    # example: https://momentkaph.sk/en/gallery/love-story -> serves /en/index.html -> angular app handles routing client-side
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(sk|en|ua)(/.*)?$ /$1/index.html [L]
+
+    #notes:
+    # F flag: returns 403 Forbidden
+    # L flag: Last rule - stop processing further rules if this one matches
+    # R=301 flag: Permanent redirect
+    # NC flag: Case-insensitive match
+</IfModule>
+
+# Module used to assign correct content metadata (Content-Type) to the corresponding content 
+# selected for HTTP response by mapping file extensions/patterns in the URI to MIME types.
+# this metadata is also used in content negotiation
+# also this module runs earlier in the processing chain to properly set Content-Type before other modules would act on it
+<IfModule mod_mime.c> # mod_mime.c is source file
+    AddType application/javascript .js
+    AddType text/css .css
+    AddType text/html .html
+    AddType image/avif .avif
+    AddType image/x-icon .ico
+    AddType image/png .png
+    AddType image/svg+xml .svg
+</IfModule>
+
+# headers module to set custom headers in HTTP response
+<IfModule mod_headers.c>
+    # Content Security Policy (CSP)
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' momentkaph.fra1.cdn.digitaloceanspaces.com; font-src 'self'; connect-src 'self' api.momentkaph.sk; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self';"
+    
+    # before CSP frame-ancestors directive
+    Header set X-Frame-Options "DENY"
+
+    # X-Content-Type-Options - prevents MIME type sniffing
+    # Browsers will trust your Content-Type headers and won't try to guess
+    # This prevents attacks where malicious content is disguised as safe files
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Referrer-Policy - controls how much information is sent in Referer header
+    # 'strict-origin-when-cross-origin' (default) sends full URL for same-origin requests
+    # but only the origin for cross-origin requests, protecting user privacy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # HSTS - force HTTPS for 1 year, including subdomains
+    # only add "preload" once you're sure and intend to submit to hstspreload.org
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    # Permissions-Policy - (experimental, low support) controls which browser features your site can use
+    # This limits the attack surface by disabling features you don't need
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+
+    # CORS based on the requesting origin
+    Header set Access-Control-Allow-Origin "https://momentkaph.sk"
+
+    # no cache for html/webmanifest - must always check for updated version
+    # these files are not content-hashed, so we need to ensure the client always gets the latest version
+    # using no-cache instead of no-store to allow caching but require revalidation
+    # index.html is only source of truth for app versioning and asset references
+    <FilesMatch "\.(html|webmanifest)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+
+    # cache js/css - long cache => 31536000 seconds ~ 1 year
+    # these files are content-hashed, so they can be cached for a long time
+    <FilesMatch "\.(js|css)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    
+    # cache control for static assets - long cache => 31536000 seconds ~ 1 year
+    <FilesMatch "\.(avif|png|svg)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # fonts - long cache => 31536000 seconds ~ 1 year
+    <FilesMatch "\.(woff2)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
+# compress content on-the-fly (transport layer) before sending to client (Content-Encoding: )
+# avif/png/woff2 are already compressed formats, no need for further compression
+# using BROTLI algorithm (Huffman encoding, LZSS and second-order context modeling)=> br
+# alternatively, could use mod_deflate (gzip), but brotli has wide support, so...
+<IfModule mod_brotli.c>
+    # AddOutputFilterByType assigns a filter to specific MIME types
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/css application/javascript # compress only html, css, js
+</IfModule>
