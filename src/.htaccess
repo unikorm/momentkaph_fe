@@ -3,9 +3,7 @@
 #
 # LAYOUT in /web/ is flat now: index.html, about-me.html, contact-me.html, gallery.html,
 # 404.html, assets/, styles/, js/, lang/, fonts/ and this file — i.e. the contents of src/.
-# No SPA fallback any more: every page is a real file, so Apache serves it directly and
-# unknown paths get a real 404. The old sk/, en/, ua/ Angular folders are only a rollback
-# net — the rules below intercept those addresses before the folders are ever reached.
+# every page is a real file, so Apache serves it directly and unknown paths get a 404. 
 
 # rewrite module to handle URL rewriting and redirection
 <IfModule mod_rewrite.c>
@@ -17,15 +15,15 @@
     # block common exploit attempts -> heavy-lifting filter is i believe managed by root configuration
     # no essential to filter wide spectrum of different threats
     # WordPress, PHP, CMS-specific paths,
-    RewriteRule ^wp- - [F,L]
-    RewriteRule ^wordpress - [F,L]
-    RewriteRule \.php$ - [F,L]
-    RewriteRule ^admin - [F,L]
-    RewriteRule ^login - [F,L]
-    RewriteRule ^xmlrpc\.php - [F,L]
+    RewriteRule ^wp- - [R=404,L]
+    RewriteRule ^wordpress - [R=404,L]
+    RewriteRule \.php$ - [R=404,L]
+    RewriteRule ^admin - [R=404,L]
+    RewriteRule ^login - [R=404,L]
+    RewriteRule ^xmlrpc\.php - [R=404,L]
     # hidden files and sensitive extensions
-    RewriteRule (^|/)\. - [F,L]
-    RewriteRule \.(env|git|svn|htaccess|htpasswd|log|sql|bak)$ - [F,L]
+    RewriteRule (^|/)\. - [R=404,L]
+    RewriteRule \.(env|git|svn|htaccess|htpasswd|log|sql|bak)$ - [R=404,L]
 
     # block SQL injection, script injection, traversal attempts, block remote file inclusion
     RewriteCond %{QUERY_STRING} (union.*select|insert.*into|delete.*from|drop.*table) [NC,OR]
@@ -84,9 +82,6 @@
     # anything else that used to live under a language prefix
     RewriteRule ^(sk|en|ua)/.*$ / [R=301,L]
 
-    # No SPA fallback: files are served as they are, missing paths fall through to
-    # ErrorDocument below with a real 404 status.
-
     #notes:
     # F flag: returns 403 Forbidden
     # L flag: Last rule - stop processing further rules if this one matches
@@ -100,7 +95,8 @@ ErrorDocument 404 /404.html
 # selected for HTTP response by mapping file extensions/patterns in the URI to MIME types.
 # this metadata is also used in content negotiation
 # also this module runs earlier in the processing chain to properly set Content-Type before other modules would act on it
-<IfModule mod_mime.c> # mod_mime.c is source file
+# mod_mime.c is source file
+<IfModule mod_mime.c>
     AddType application/javascript .js
     AddType text/css .css
     AddType text/html .html
@@ -116,7 +112,6 @@ ErrorDocument 404 /404.html
 # headers module to set custom headers in HTTP response
 <IfModule mod_headers.c>
     # Content Security Policy (CSP)
-    # img-src: gallery photos come from wherever the API points (DigitalOcean now, Scaleway later)
     Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' momentkaph.fra1.cdn.digitaloceanspaces.com; font-src 'self'; connect-src 'self' api.momentkaph.sk; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self';"
 
     # before CSP frame-ancestors directive
@@ -143,18 +138,15 @@ ErrorDocument 404 /404.html
     # CORS based on the requesting origin
     Header set Access-Control-Allow-Origin "https://momentkaph.sk"
 
-    # CHANGED: js/css are NOT content-hashed any more (no build step, files are js/index.js,
-    # styles/global.css ...). The Angular rule cached them "1 year, immutable" — with these
-    # names that would freeze the old code in every returning browser after a deploy.
     # no-cache = always revalidate; Apache answers a cheap 304 when nothing changed.
     <FilesMatch "\.(html|webmanifest|json|js|css)$">
         Header set Cache-Control "no-cache, must-revalidate"
     </FilesMatch>
 
-    # images, icons, fonts - long cache => 31536000 seconds ~ 1 year
+    # images, icons, fonts - cache for 2592000 seconds ~ 1 month
     # these rarely change; when one does, give it a new file name
     <FilesMatch "\.(avif|png|svg|ico|woff2)$">
-        Header set Cache-Control "public, max-age=31536000, immutable"
+        Header set Cache-Control "public, max-age=2592000, immutable"
     </FilesMatch>
 </IfModule>
 
