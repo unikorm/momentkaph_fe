@@ -1,4 +1,4 @@
-name: Deploy FE to Websupport
+name: Deploy FE
 on:
   push:
     branches: [main]

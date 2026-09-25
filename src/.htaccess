@@ -169,7 +169,7 @@ ErrorDocument 404 /404.html
     # images, icons, fonts - cache for 2592000 seconds ~ 1 month
     # these rarely change; when one does, give it a new file name
     <FilesMatch "\.(avif|png|svg|ico|woff2)$">
-        Header always set Cache-Control "public, max-age=2592000, immutable"
+        Header always set Cache-Control "no-cache, must-revalidate"
     </FilesMatch>
 </IfModule>
 
