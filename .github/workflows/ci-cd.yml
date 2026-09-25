@@ -16,7 +16,7 @@ jobs:
           HOST: ${{ secrets.WS_HOST }}
           USER: ${{ secrets.WS_USER }}
           PASS: ${{ secrets.WS_PASS }}
-          TARGET: ${{ vars.WS_PATH }}
+          TARGET: ${{ secrets.WS_PATH }}
         run: |
           lftp -u "$USER,$PASS" "sftp://$HOST:22" -e "
             set sftp:auto-confirm yes;
