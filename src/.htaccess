@@ -30,13 +30,13 @@
     RewriteCond %{QUERY_STRING} (<script|javascript:|onerror=|onload=) [NC,OR]
     RewriteCond %{QUERY_STRING} (\.\./|\.\.\\|/etc/passwd) [NC,OR]
     RewriteCond %{QUERY_STRING} (http://|https://|ftp://) [NC]
-    RewriteRule .* - [F,L]
+    RewriteRule .* - [R=404,L]
 
     # block requests without a User-Agent header
     # legitimate browsers always send this, but many automated scanners don't + block known bad bot patterns
     RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
     RewriteCond %{HTTP_USER_AGENT} (semrush|ahrefs|mj12bot|majestic) [NC]
-    RewriteRule .* - [F,L]
+    RewriteRule .* - [R=404,L]
 
     # Apache runs this file again after an internal rewrite and for the ErrorDocument
     # (REDIRECT_STATUS is set then). The target is already final: stop.
@@ -44,20 +44,19 @@
     RewriteRule ^ - [L]
 
     # Handle social media and tracking parameters
-    # CHANGED: the gallery now carries its own query (?type=weddings&subtype=baptism), and the
-    # old rule wiped the WHOLE query string — a link shared on Facebook comes back with fbclid
-    # appended and would have lost its type. So strip only on the pages that have no params.
+    # the gallery now carries its own query (?type=weddings&subtype=baptism)
+    # strip only on the pages that have no params.
     RewriteCond %{QUERY_STRING} (^|&)(fbclid|fb_[^=]*|utm_[^=]*|source|ref)= [NC]
     RewriteRule ^(|index\.html|about-me\.html|contact-me\.html)$ /$1? [R=301,L]
 
     # Redirect 'www' to non-'www'
     RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-    RewriteRule ^(.*)$ https://%1/$1 [L,R=301]
+    RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
     # ============================================================
     # OLD ANGULAR ADDRESSES -> new flat ones
-    # Google has indexed /sk/gallery/weddings, /en/about-me, /ua/contact-me ... and people
-    # have them bookmarked, so they 301 to the new address.
+    # Google has indexed /sk/gallery/weddings, /en/about-me, /ua/contact-me
+    # so they need 301 to the new address.
     #
     # One exception: the old home page. The previous .htaccess 301-redirected / to
     # /sk/index.html and browsers CACHE 301s, so a returning visitor still goes straight to
@@ -95,7 +94,6 @@ ErrorDocument 404 /404.html
 # selected for HTTP response by mapping file extensions/patterns in the URI to MIME types.
 # this metadata is also used in content negotiation
 # also this module runs earlier in the processing chain to properly set Content-Type before other modules would act on it
-# mod_mime.c is source file
 <IfModule mod_mime.c>
     AddType application/javascript .js
     AddType text/css .css
