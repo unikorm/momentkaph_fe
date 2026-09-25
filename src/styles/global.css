@@ -30,8 +30,7 @@ body {
 
 @font-face {
   font-family: "Caveat";
-  src: url("/fonts/CaveatReg.woff2") format("woff2");
-  font-display: optional;
-  font-weight: normal;
-  font-style: normal;
+  src: url("/fonts/CaveatReg-latin.woff2") format("woff2");
+  font-display: block;
+  unicode-range: U+0000-00FF, U+0100-017F, U+2013-2014, U+2018-201E, U+2026, U+20AC;
 }
