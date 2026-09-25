@@ -110,8 +110,10 @@ window.addEventListener('popstate', () => {
 
 /** Hero image + heading. */
 function renderChrome({ photo, title, titleKey, heroClass }) {
+  els.hero.alt = 'hero';
+  els.hero.srcset = `assets/${withSuffix(photo)} 700w, assets/${photo} 1600w`;
+  els.hero.sizes = '100vw';
   els.hero.src = `assets/${photo}`;
-  els.hero.alt = '';
   if (heroClass) els.hero.classList.add(heroClass);
 
   els.title.textContent = title;
@@ -239,4 +241,8 @@ function showError(err) {
   console.error('[gallery]', err);
   els.grid.hidden = true;
   els.error.hidden = false;
+}
+
+function withSuffix(file, suffix = '_smaller') {
+  return file.replace(/(\.[^.]+)$/, `${suffix}$1`);
 }
