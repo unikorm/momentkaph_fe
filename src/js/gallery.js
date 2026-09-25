@@ -111,7 +111,7 @@ window.addEventListener('popstate', () => {
 /** Hero image + heading. */
 function renderChrome({ photo, title, titleKey, heroClass }) {
   els.hero.alt = 'hero';
-  els.hero.srcset = `assets/${withSuffix(photo)} 800w, assets/${photo} 1460w`;
+  els.hero.srcset = `assets/${withSuffix(photo)} 1200w, assets/${photo} 1560w`;
   els.hero.sizes = '100vw';
   els.hero.src = `assets/${photo}`;
   if (heroClass) els.hero.classList.add(heroClass);
