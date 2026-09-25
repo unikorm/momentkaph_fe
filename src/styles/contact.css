@@ -183,6 +183,7 @@ button:not(.success):not(.error):hover {
 
 .image_group>div:last-child {
   flex-shrink: 0;
+  width: 100%;
 }
 
 .contact-image-container {

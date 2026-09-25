@@ -15,15 +15,9 @@
     # block common exploit attempts -> heavy-lifting filter is i believe managed by root configuration
     # no essential to filter wide spectrum of different threats
     # WordPress, PHP, CMS-specific paths,
-    RewriteRule ^wp- - [R=404,L]
-    RewriteRule ^wordpress - [R=404,L]
-    RewriteRule \.php$ - [R=404,L]
-    RewriteRule ^admin - [R=404,L]
-    RewriteRule ^login - [R=404,L]
-    RewriteRule ^xmlrpc\.php - [R=404,L]
-    # hidden files and sensitive extensions
-    RewriteRule (^|/)\. - [R=404,L]
-    RewriteRule \.(env|git|svn|htaccess|htpasswd|log|sql|bak)$ - [R=404,L]
+    RewriteCond %{REQUEST_URI} ^/(wp-|wordpress|admin|login) [NC,OR]
+    RewriteCond %{REQUEST_URI} \.(php|env|git|svn|htaccess|htpasswd|log|sql|bak)$ [NC]
+    RewriteRule .* - [R=404,L]
 
     # block SQL injection, script injection, traversal attempts, block remote file inclusion
     RewriteCond %{QUERY_STRING} (union.*select|insert.*into|delete.*from|drop.*table) [NC,OR]
@@ -110,10 +104,34 @@ ErrorDocument 404 /404.html
 # headers module to set custom headers in HTTP response
 <IfModule mod_headers.c>
     # Content Security Policy (CSP)
-    Header set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' momentkaph.fra1.cdn.digitaloceanspaces.com; font-src 'self'; connect-src 'self' api.momentkaph.sk; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self';"
+    # default-src 'none' = deny by default, so anything i add later and forget to list here
+    # breaks loudly instead of being quietly allowed from 'self'. every type actually used is
+    # enumerated below; directives that do NOT fall back to default-src (base-uri, form-action,
+    # frame-ancestors) are spelled out regardless.
+    #   script-src/style-src 'self' - no 'unsafe-inline': every page loads its js/css from a file
+    #     and there is not one style="" attribute or inline handler left in the html.
+    #     (js/gallery.js sets card.style.aspectRatio via CSSOM - CSP does not govern CSSOM, so it
+    #     keeps working without 'unsafe-inline'.)
+    #   img-src - local assets + the photo CDN, the only thing still hosted off-origin
+    #   connect-src - the only fetch() target is the api
+    #   manifest-src - site.webmanifest; it does not fall back to default-src, so it needs saying
+    #   form-action 'none' - the contact form is submitted by fetch() in js/contact.js with
+    #     preventDefault(), so nothing ever navigates on submit. if the js fails to load, the
+    #     browser blocks the native GET instead of putting name/email/phone in the URL.
+    #   schemes are explicit (https://) rather than bare hosts, so a host can never be matched
+    #     over plain http
+    Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' https://momentkaph.fra1.cdn.digitaloceanspaces.com; font-src 'self'; connect-src 'self' https://api.momentkaph.sk; manifest-src 'self'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
 
     # before CSP frame-ancestors directive
-    Header set X-Frame-Options "DENY"
+    Header always set X-Frame-Options "DENY"
+
+    # COOP - drops any window.opener relationship, so a page i open (or that opens me) cannot
+    # reach into this one. the outbound social links already carry rel="noopener"; this covers
+    # the rest at the header level.
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+
+    # blocks the legacy Flash/PDF crossdomain.xml policy-file mechanism
+    Header always set X-Permitted-Cross-Domain-Policies "none"
 
     # X-Content-Type-Options - prevents MIME type sniffing
     # Browsers will trust your Content-Type headers and won't try to guess
@@ -131,20 +149,27 @@ ErrorDocument 404 /404.html
 
     # Permissions-Policy - (experimental, low support) controls which browser features your site can use
     # This limits the attack surface by disabling features you don't need
-    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+    # a photo portfolio needs none of these: the only browser API the js touches is
+    # navigator.languages, which is not gated by this header. empty allowlist = off for me and
+    # for anything embedded in me.
+    Header always set Permissions-Policy "accelerometer=(), autoplay=(), browsing-topics=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(), gamepad=(), geolocation=(), gyroscope=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), usb=(), xr-spatial-tracking=()"
 
-    # CORS based on the requesting origin
-    Header set Access-Control-Allow-Origin "https://momentkaph.sk"
+    # NOTE: Access-Control-Allow-Origin was removed. every subresource here is same-origin
+    # (the only cross-origin traffic is OUTBOUND: images from the CDN and fetch() to the api,
+    # and those are governed by the CDN's and the api's own CORS headers, not by mine).
+    # same-origin requests never consult ACAO - not even the woff2 preload, which is fetched in
+    # CORS mode because of crossorigin="anonymous" but short-circuits the CORS check as
+    # same-origin - so the header granted nothing and only advertised an origin allowance.
 
     # no-cache = always revalidate; Apache answers a cheap 304 when nothing changed.
-    <FilesMatch "\.(html|webmanifest|json|js|css)$">
-        Header set Cache-Control "no-cache, must-revalidate"
+    <FilesMatch "\.(html|webmanifest|js|css)$">
+        Header always set Cache-Control "no-cache, must-revalidate"
     </FilesMatch>
 
     # images, icons, fonts - cache for 2592000 seconds ~ 1 month
     # these rarely change; when one does, give it a new file name
     <FilesMatch "\.(avif|png|svg|ico|woff2)$">
-        Header set Cache-Control "public, max-age=2592000, immutable"
+        Header always set Cache-Control "public, max-age=2592000, immutable"
     </FilesMatch>
 </IfModule>
 
@@ -154,5 +179,5 @@ ErrorDocument 404 /404.html
 # alternatively, could use mod_deflate (gzip), but brotli has wide support, so...
 <IfModule mod_brotli.c>
     # AddOutputFilterByType assigns a filter to specific MIME types
-    AddOutputFilterByType BROTLI_COMPRESS text/html text/css application/javascript application/json
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/css application/javascript
 </IfModule>
