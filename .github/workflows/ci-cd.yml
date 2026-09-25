@@ -21,5 +21,5 @@ jobs:
           lftp -u "$USER,$PASS" "sftp://$HOST:22" -e "
             set sftp:auto-confirm yes;
             set net:max-retries 2;
-            mirror -R --delete --verbose --dry-run ./src/ $TARGET;
+            mirror -R --delete --verbose ./src/ $TARGET;
             bye"
