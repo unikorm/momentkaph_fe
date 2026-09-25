@@ -1,18 +1,25 @@
-name: CI
-
+name: Deploy FE to Websupport
 on:
   push:
-    branches: [test]
-  pull_request:
-    branches: [test]
+    branches: [main]
+    paths: ['src/**']
+  workflow_dispatch:
 
 jobs:
-  validate:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Check JS syntax
-        run: find src/js dev.js -name '*.js' -exec node --check {} +
+      - run: sudo apt-get update && sudo apt-get install -y lftp
+      - name: Mirror src/ via SFTP
+        env:
+          HOST: ${{ secrets.WS_HOST }}
+          USER: ${{ secrets.WS_USER }}
+          PASS: ${{ secrets.WS_PASS }}
+          TARGET: ${{ vars.WS_PATH }}
+        run: |
+          lftp -u "$USER,$PASS" "sftp://$HOST:22" -e "
+            set sftp:auto-confirm yes;
+            set net:max-retries 2;
+            mirror -R --delete --verbose --dry-run ./src/ $TARGET;
+            bye"
