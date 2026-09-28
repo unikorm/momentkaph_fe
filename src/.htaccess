@@ -104,7 +104,7 @@ ErrorDocument 404 /404.html
 # headers module to set custom headers in HTTP response
 <IfModule mod_headers.c>
 
-    Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' https://momentkaph.fra1.cdn.digitaloceanspaces.com; font-src 'self'; connect-src 'self' https://api.momentkaph.sk; manifest-src 'self'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
+    Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' https://momentkaph-images.s3.pl-waw.scw.cloud; font-src 'self'; connect-src 'self' https://api.momentkaph.sk; manifest-src 'self'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
 
     # before CSP frame-ancestors directive
     Header always set X-Frame-Options "DENY"
